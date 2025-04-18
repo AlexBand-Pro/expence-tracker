@@ -10,6 +10,16 @@ let expensesArray = []
 let caterFilter = "All categories"
 let periodFilterValue = "1925-04-18"
 
+const stored = localStorage.getItem("expenses")
+
+if (stored) {
+  expensesArray = JSON.parse(stored)
+}
+
+const saveExpenses = () => {
+  localStorage.setItem("expenses", JSON.stringify(expensesArray))
+}
+
 const amountInput = document.getElementById("amount");
 
 amountInput.addEventListener("input", () => {
@@ -61,6 +71,7 @@ const addNewExpense = (name, amount, category, date) => {
     date: date
   })
 
+  saveExpenses()
   filterItems()
 }
 
@@ -70,6 +81,7 @@ const deleteExpense = (expenseId) => {
   })
 
   expensesArray = updatedArr
+  saveExpenses()
   filterItems()
 }
 
