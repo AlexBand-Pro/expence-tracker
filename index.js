@@ -40,15 +40,7 @@ form.addEventListener("submit", (e) => {
   clearForm()
 })
 
-const addNewExpense = (name, amount, category, date) => {
-  expensesArray.push({
-    id: uuidv4(),
-    item: name,
-    amount: amount,
-    category: category,
-    date: date
-  })
-
+const filterItems = () => {
   const filteredByCategory = expensesArray.filter((expense) => {
     return caterFilter === "All categories" || expense.category === caterFilter
   })
@@ -60,22 +52,25 @@ const addNewExpense = (name, amount, category, date) => {
   renderApp(filteredByDate, caterFilter)
 }
 
+const addNewExpense = (name, amount, category, date) => {
+  expensesArray.push({
+    id: uuidv4(),
+    item: name,
+    amount: amount,
+    category: category,
+    date: date
+  })
+
+  filterItems()
+}
+
 const deleteExpense = (expenseId) => {
   const updatedArr = expensesArray.filter((expense) => {
     return expense.id !== expenseId
   })
 
   expensesArray = updatedArr
-
-  const filteredByCategory = expensesArray.filter((expense) => {
-    return caterFilter === "All categories" || expense.category === caterFilter
-  })
-
-  const filteredByDate = filteredByCategory.filter((expense) => {
-    return expense.date >= periodFilterValue
-  })
-
-  renderApp(filteredByDate, caterFilter)
+  filterItems()
 }
 
 
@@ -87,13 +82,13 @@ const getTotalSpent = (arr) => {
   return totalInCents / 100
 }
 
-const renderExpenses = (itemsArr, filterText="All categories") => {
+const renderExpenses = (itemsArr, categoryText="All categories") => {
   const container = document.getElementById("all-expenses")
 
   if (itemsArr.length === 0) {
     container.innerHTML = ""
   } else {
-    container.innerHTML = `<p>${filterText}</p>`
+    container.innerHTML = `<p>${categoryText}</p>`
   }
 
   itemsArr.forEach((expense) => {
@@ -142,18 +137,8 @@ const clearForm = () => {
   document.getElementById('date').value = today;
 }
 
-// const filterItems = () => {
-//   const filteredByCategory = expensesArray.filter((expense) => {
-//     return caterFilter === "All categories" || expense.category === caterFilter
-//   })
-
-//   const filteredByDate = filteredByCategory.filter((expense) => {
-//     return expense.date >= periodFilterValue
-//   })
-// }
-
-const renderApp = (arr) => {
-  renderExpenses(arr)
+const renderApp = (arr, categoryText) => {
+  renderExpenses(arr, categoryText)
   renderTotalSpent(arr)
 }
 
@@ -165,16 +150,7 @@ document.addEventListener("click", (e) => {
 
 categoryFilter.addEventListener("change", (e) => {
   caterFilter = e.target.value
-
-  const filteredByCategory = expensesArray.filter((expense) => {
-    return caterFilter === "All categories" || expense.category === caterFilter
-  })
-
-  const filteredByDate = filteredByCategory.filter((expense) => {
-    return expense.date >= periodFilterValue
-  })
-
-  renderApp(filteredByDate, caterFilter)
+  filterItems()
 })
 
 periodFilter.addEventListener("change", (e) => {
@@ -182,16 +158,7 @@ periodFilter.addEventListener("change", (e) => {
   const date = new Date(today)
   date.setDate(date.getDate() - Number(selectedValue))
   periodFilterValue = date.toISOString().split('T')[0]
-
-  const filteredByCategory = expensesArray.filter((expense) => {
-    return caterFilter === "All categories" || expense.category === caterFilter
-  })
-  
-  const filteredByDate = filteredByCategory.filter((expense) => {
-    return expense.date >= periodFilterValue
-  })
-
-  renderApp(filteredByDate, caterFilter)
+  filterItems()
 })
 
 renderApp(expensesArray)
