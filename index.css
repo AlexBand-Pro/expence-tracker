@@ -1,4 +1,6 @@
-*, ::after, ::before {
+*,
+::after,
+::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -6,6 +8,12 @@
 
 body {
   background-color: rgb(241, 241, 241);
+}
+
+body,
+button,
+input {
+  font-family: "Roboto", sans-serif;
 }
 
 
@@ -24,4 +32,116 @@ h1 {
 
 main {
   background-color: rgb(255, 255, 255);
+}
+
+.add-expense-container,
+.filter,
+.total-spent,
+.all-expenses {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  /* gap: 1em; */
+}
+
+.all-expenses {
+  gap: 1.5em;
+}
+
+.expense {
+  gap: 0.5em;
+}
+
+.add-expense-container,
+.filter,
+.total-spen {
+  align-items: center;
+}
+
+.expense {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+form,
+.filter {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+form>input,
+form>select,
+form>button,
+.filter>select,
+.expense-details,
+.total-spent>p {
+  border-radius: 0.5em;
+  border: 1px solid rgb(211, 211, 211);
+  padding: 0.7em 0.5em;
+}
+
+form>input,
+form>select,
+form>button,
+.total-spent>p,
+.filter>select,
+.expense-details {
+  width: 100%;
+}
+
+form>button {
+  background-color: rgb(45, 111, 197);
+  color: whitesmoke;
+  font-weight: 500;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.05em;
+}
+
+.total-spent>p {
+  font-weight: 600;
+  font-size: 0.95rem;
+  font-family: "Roboto Mono", monospace;
+}
+
+.expense-details {
+  display: flex;
+  gap: 0.2em;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.expense-details > span {
+  text-transform: capitalize;
+}
+
+.details-line-one {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3em;
+}
+
+.details-line-one > .item-amount {
+  font-weight: 700;
+}
+
+.expense>p, .all-expenses > p {
+  font-weight: 700;
+}
+
+.all-expenses > p {
+  font-size: 1.3rem;
+}
+
+.delete-expense-btn {
+  border-radius: 0.3em;
+  border: none;
+  background-color: red;
+  color: whitesmoke;
+  padding: 0.3em 0.4em;
+  font-weight: 500;
 }

@@ -6,31 +6,84 @@
     <title>Expence Tracker</title>
     <link rel="stylesheet" href="index.css">
 
-    <!--  -->
+    <!-- Sixtyfour Convergence Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap" rel="stylesheet">
+
+    <!-- Roboto Mono Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+    <!-- Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
     <header>
       <h1>ExpenseTracker</h1>
     </header>
     <main>
-      <div>
-        <input type="text" />
-        <input type="number" />
-        <input type="date">
-        <select>
-          <option value="">Food</option>
-          <option value="">Bills</option>
-          <option value="">Car</option>
-        </select>
-        <button>Add Expense</button>
-        <p>Total Spent: $0.00</p>
+      <div class="add-expense-container">
+        <form>
+          <input type="text" id="item" name="item" placeholder="Item" required/>
+          <input type="number" id="amount" name="amount" placeholder="Amount" required/>
+          <select required>
+            <option value="" disabled selected>-- select category --</option>
+            <option value="housing">Housing</option>
+            <option value="utilities">Utilities</option>
+            <option value="food">Food</option>
+            <option value="transportation">Transportation</option>
+            <option value="health">Health</option>
+            <option value="personal-and-household">Personal & Household</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="travel">Travel</option>
+            <option value="savings-and-investments">Savings & Investments</option>
+            <option value="debt-payments">Debt Payments</option>
+            <option value="education">Education</option>
+            <option value="gifts-and-donations">Gifts & Donations</option>
+            <option value="pets">Pets</option>
+            <option value="kids">Kids</option>
+          </select>
+          <input type="date" id="date" name="date" required>
+          <button>Add Expense</button>
+        </form>
       </div>
-      <div></div>
-      <div></div>
+      <div class="filter">
+        <select required>
+          <option value="all-categories">All categories</option>
+          <option value="housing">Housing</option>
+          <option value="utilities">Utilities</option>
+          <option value="food">Food</option>
+          <option value="transportation">Transportation</option>
+          <option value="health">Health</option>
+          <option value="personal-and-household">Personal & Household</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="travel">Travel</option>
+          <option value="savings-and-investments">Savings & Investments</option>
+          <option value="debt-payments">Debt Payments</option>
+          <option value="education">Education</option>
+          <option value="gifts-and-donations">Gifts & Donations</option>
+          <option value="pets">Pets</option>
+          <option value="kids">Kids</option>
+        </select>
+        <select required>
+          <option value="lifetime">Lifetime</option>
+          <option value="one-day">1 day</option>
+          <option value="seven-days">7 days</option>
+          <option value="thirty-days">30 days</option>
+          <option value="ninety-days">90 days</option>
+        </select>
+      </div>
+      <div class="total-spent">
+        <p class="total">Total Spent: $0.00</p>
+      </div>
+      <div class="all-expenses" id="all-expenses">
+        <p>Expenses:</p>
+      </div>
     </main>
-    <script src="index.js"></script>
+    <script src="index.js" type="module"></script>
   </body>
 </html>
