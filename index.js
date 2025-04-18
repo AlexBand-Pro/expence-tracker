@@ -1,22 +1,50 @@
 const today = new Date().toISOString().split('T')[0]
 document.getElementById('date').value = today;
+const form = document.querySelector("form")
 
-const expensesArray = [
-  {
-    id: 1,
-    item: "snacks",
-    amount: 12.5,
-    category: "food",
-    date: today
-  },
-  {
-    id: 2,
-    item: "shirt",
-    amount: 5,
-    category: "personal & household",
-    date: today
-  },
-]
+const expensesArray = []
+
+const amountInput = document.getElementById("amount");
+
+amountInput.addEventListener("input", () => {
+  let value = amountInput.value
+  value = value.replace(/[^0-9.]/g, '')
+  
+  const dotCount = value.split('.').length - 1;
+  if (dotCount > 1) {
+    value = value.slice(0, value.lastIndexOf('.'))
+  }
+
+  amountInput.value = value;
+});
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault()
+
+  const formData = new FormData(form)
+
+  const item = formData.get("item").trim().replace(/\s+/g, " ")
+  const number = formData.get("amount")
+  const category = formData.get("category")
+  const date = formData.get("date")
+
+  const amount = Number(parseFloat(number).toFixed(2))
+
+  addNewExpense(item, amount, category, date)
+  clearForm()
+})
+
+const addNewExpense = (name, amount, category, date) => {
+  expensesArray.push({
+    id: expensesArray.length,
+    item: name,
+    amount: amount,
+    category: category,
+    date: date
+  })
+
+  renderApp()
+}
 
 const getExpenses = () => {
   return expensesArray.map((expense) => {
@@ -31,9 +59,18 @@ const getExpenses = () => {
   }).join("")
 }
 
+
+const getTotalSpent = () => {
+  const totalInCents = expensesArray.reduce((total, current) => {
+    return total + Math.round(current.amount * 100)
+  }, 0)
+
+  return totalInCents / 100
+}
+
 const renderExpenses = () => {
   const container = document.getElementById("all-expenses")
-  container.innerHTML = ""
+  container.innerHTML = "<p>Expenses:</p>"
 
   expensesArray.forEach((expense) => {
     const expenseDiv = document.createElement("div")
@@ -67,4 +104,19 @@ const renderExpenses = () => {
   })
 }
 
-renderExpenses()
+const renderTotalSpent = () => {
+  const totalSum = getTotalSpent()
+  document.getElementById("total").textContent = `Total Spent: $${totalSum}`
+}
+
+const clearForm = () => {
+  document.getElementById("item").value = ""
+  document.getElementById("amount").value = ""
+  document.getElementById("category").selectedIndex = 0
+  document.getElementById('date').value = today;
+}
+
+const renderApp = () => {
+  renderExpenses()
+  renderTotalSpent()
+}
