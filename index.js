@@ -1,8 +1,10 @@
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
+
 const today = new Date().toISOString().split('T')[0]
 document.getElementById('date').value = today;
 const form = document.querySelector("form")
 
-const expensesArray = []
+let expensesArray = []
 
 const amountInput = document.getElementById("amount");
 
@@ -36,7 +38,7 @@ form.addEventListener("submit", (e) => {
 
 const addNewExpense = (name, amount, category, date) => {
   expensesArray.push({
-    id: expensesArray.length,
+    id: uuidv4(),
     item: name,
     amount: amount,
     category: category,
@@ -46,17 +48,19 @@ const addNewExpense = (name, amount, category, date) => {
   renderApp()
 }
 
-const getExpenses = () => {
-  return expensesArray.map((expense) => {
-    return `<div class="expense">
-              <p>${expense.date}</p>
-              <div class="expense-details">
-                <span>${expense.item}</span>
-                <span>$${expense.amount}</span>
-                <button class="delete-expense-btn">Delete</button>
-              </div>
-            </div>`
-  }).join("")
+document.addEventListener("click", (e) => {
+  if (e.target.dataset.id) {
+    deleteExpense(e.target.dataset.id)
+  }
+})
+
+const deleteExpense = (expenseId) => {
+  const updatedArr = expensesArray.filter((expense) => {
+    return expense.id !== expenseId
+  })
+
+  expensesArray = updatedArr
+  renderApp()
 }
 
 
@@ -95,6 +99,7 @@ const renderExpenses = () => {
     const deleteBtn = document.createElement("button")
     deleteBtn.classList.add("delete-expense-btn")
     deleteBtn.textContent = "Delete"
+    deleteBtn.dataset.id = expense.id
 
     lineOneDiv.append(itemSpan, amountSpan)
     detailsDiv.append(lineOneDiv, deleteBtn)

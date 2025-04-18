@@ -16,6 +16,10 @@ input {
   font-family: "Roboto", sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 
 header {
   background-color: black;
