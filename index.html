@@ -1,33 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expence Tracker</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="index.css" />
 
     <!-- Sixtyfour Convergence Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Roboto Mono Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Roboto -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
+    <div id="shade" class="shade hidden"></div>
     <header>
       <div class="width-setter-div">
         <h1>ExpenseTracker</h1>
@@ -46,8 +62,8 @@
       </div>
 
       <div class="content-settigns-content">
-        <div class="dark-mode-wrapper">
-          <button id="dark-mode-btn" class="dark-mode-btn">Light</button>
+        <div class="dark-mode-wrapper" aria-live="polite">
+          <button id="dark-mode-btn" class="dark-mode-btn" aria-label="click to toggle theme">Light</button>
           <button id="settings" class="settings-btn">Monthly Cap</button>
           <div id="cap-setter" class="cap-setter hidden">
             <input type="number" id="cap" name="cap" placeholder="Amount" />
@@ -58,29 +74,43 @@
             </div>
           </div>
         </div>
-  
-        <div id="success-module" class="success-module hidden">
+
+        <div id="success-module" class="success-module hidden" aria-live="polite">
           <p>Success!</p>
         </div>
-  
-        <div id="shade" class="shade hidden"></div>
-  
-        <div id="over-billion-module" class="over-billion-module hidden">
+
+        <div id="over-billion-module" class="over-billion-module hidden" aria-live="polite">
           <p>Really? You buying a country?</p>
         </div>
-  
-        <div id="cap-warning" class="cap-warning hidden">
-          <p>You are about to exceed your monthly cap. Are you sure you want to continue?</p>
+
+        <div id="cap-warning" class="cap-warning hidden" aria-live="polite">
+          <p>
+            You are about to exceed your monthly cap. Are you sure you want to
+            continue?
+          </p>
           <div class="cap-warning-btn">
             <button id="warning-yes-btn" class="warning-yes-btn">Yes</button>
             <button id="warning-no-btn" class="warning-no-btn">No</button>
           </div>
         </div>
-  
+
         <div class="add-expense-container">
           <form>
-            <input type="text" id="item" name="item" placeholder="Item" maxlength="30" required/>
-            <input type="text" id="amount" name="amount" placeholder="Amount" required/>
+            <input
+              type="text"
+              id="item"
+              name="item"
+              placeholder="Item"
+              maxlength="30"
+              required
+            />
+            <input
+              type="text"
+              id="amount"
+              name="amount"
+              placeholder="Amount"
+              required
+            />
             <select id="category" name="category" required>
               <option value="" disabled selected>-- select category --</option>
               <option value="Housing">Housing</option>
@@ -91,7 +121,9 @@
               <option value="Personal & Household">Personal & Household</option>
               <option value="Entertainment">Entertainment</option>
               <option value="Travel">Travel</option>
-              <option value="Savings & Investments">Savings & Investments</option>
+              <option value="Savings & Investments">
+                Savings & Investments
+              </option>
               <option value="Debt Payments">Debt Payments</option>
               <option value="Education">Education</option>
               <option value="Gifts & Donations">Gifts & Donations</option>
@@ -99,7 +131,7 @@
               <option value="Kids">Kids</option>
               <option value="Bills">Bills</option>
             </select>
-            <input type="date" id="date" name="date" required>
+            <input type="date" id="date" name="date" required />
             <button id="form-btn">Add Expense</button>
           </form>
         </div>
@@ -131,11 +163,11 @@
           </select>
         </div>
         <div class="total-spent">
-          <p class="total" id="total">Total Spent: $0.00</p>
+          <p class="total" id="total" aria-live="polite">Total Spent: $0.00</p>
         </div>
       </div>
 
-      <div class="all-expenses" id="all-expenses">
+      <div class="all-expenses" id="all-expenses" aria-live="polite">
         <p>Expenses:</p>
       </div>
     </main>

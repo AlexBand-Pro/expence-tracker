@@ -1,272 +1,269 @@
-import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
+import { v4 as uuidv4 } from "https://jspm.dev/uuid";
 
-const today = new Date().toLocaleDateString('en-CA');
-document.getElementById('date').value = today;
+const today = new Date().toLocaleDateString("en-CA");
+document.getElementById("date").value = today;
 
-const form = document.querySelector("form")
-const categoryFilter = document.getElementById("category-filter")
-const periodFilter = document.getElementById("period-filter")
+const form = document.querySelector("form");
+const categoryFilter = document.getElementById("category-filter");
+const periodFilter = document.getElementById("period-filter");
 
-let expensesArray = []
-let caterFilter = "All categories"
-let periodFilterValue = "1925-04-18"
+let expensesArray = [];
+let caterFilter = "All categories";
+let periodFilterValue = "1925-04-18";
 
-const stored = localStorage.getItem("expenses")
+const stored = localStorage.getItem("expenses");
 
 if (stored) {
-  expensesArray = JSON.parse(stored)
+  expensesArray = JSON.parse(stored);
 }
 
 const amountInput = document.getElementById("amount");
 
-const darkModeBtn = document.getElementById("dark-mode-btn")
+const darkModeBtn = document.getElementById("dark-mode-btn");
 
-const settengsBtn = document.getElementById("settings")
+const settengsBtn = document.getElementById("settings");
 
-const capAmount = document.getElementById("cap")
+const capAmount = document.getElementById("cap");
 
-let chartInstance = null
+let chartInstance = null;
 
-let monthlyCap = null
+let monthlyCap = null;
 
-const storedCap = localStorage.getItem("cap")
+const storedCap = localStorage.getItem("cap");
 
 if (storedCap) {
-  monthlyCap = JSON.parse(storedCap)
+  monthlyCap = JSON.parse(storedCap);
 }
 
-let darkMode = false
+let darkMode = false;
 
-const storedTheme = localStorage.getItem("theme")
+const storedTheme = localStorage.getItem("theme");
 
 if (storedTheme) {
-  darkMode = JSON.parse(storedTheme)
+  darkMode = JSON.parse(storedTheme);
 }
-
-// Add a message to tell the user there's no data, if theer is none.
-//add filters to local storage
-//make the chart placeholder appear smoother. Don't remove it from the page, make it unvisible with classes and add transition
-
-// 
 
 const saveCap = () => {
-  localStorage.setItem("cap", JSON.stringify(monthlyCap))
-}
+  localStorage.setItem("cap", JSON.stringify(monthlyCap));
+};
 
 const saveExpenses = () => {
-  localStorage.setItem("expenses", JSON.stringify(expensesArray))
-}
+  localStorage.setItem("expenses", JSON.stringify(expensesArray));
+};
 
 const saveTheme = () => {
-  localStorage.setItem("theme", JSON.stringify(darkMode))
-}
+  localStorage.setItem("theme", JSON.stringify(darkMode));
+};
 
 const setMonthlyCap = () => {
-  monthlyCap = Number(capAmount.value)
-  saveCap()
-  capAmount.value = ""
-  handleModuleDisplay()
-}
+  monthlyCap = Number(capAmount.value);
+  saveCap();
+  capAmount.value = "";
+  handleModuleDisplay();
+};
 
 const handleModuleDisplay = () => {
-  document.getElementById("cap-setter").classList.toggle("hidden")
-  document.getElementById("success-module").classList.toggle("hidden")
+  document.getElementById("cap-setter").classList.toggle("hidden");
+  document.getElementById("success-module").classList.toggle("hidden");
 
   setTimeout(() => {
-    document.getElementById("success-module").classList.toggle("hidden")
-    document.getElementById("shade").classList.toggle("hidden")
-  }, 1000)
-}
+    document.getElementById("success-module").classList.toggle("hidden");
+    document.getElementById("shade").classList.toggle("hidden");
+  }, 1000);
+};
 
 const removeCap = () => {
-  monthlyCap = null
-  saveCap()
-  handleModuleDisplay()
-}
+  monthlyCap = null;
+  saveCap();
+  handleModuleDisplay();
+};
 
 const toggleSettingsModule = () => {
-  document.getElementById("cap-setter").classList.toggle("hidden")
-  document.getElementById("shade").classList.toggle("hidden")
-}
+  document.getElementById("cap-setter").classList.toggle("hidden");
+  document.getElementById("shade").classList.toggle("hidden");
+};
 
 const checkAmount = (item, amount, category, date) => {
   if (amount >= 1000000000) {
-    document.getElementById("over-billion-module").classList.toggle("hidden")
-    document.getElementById("shade").classList.toggle("hidden")
+    document.getElementById("over-billion-module").classList.toggle("hidden");
+    document.getElementById("shade").classList.toggle("hidden");
 
     setTimeout(() => {
-      document.getElementById("over-billion-module").classList.toggle("hidden")
-      document.getElementById("shade").classList.toggle("hidden")
-    }, 2000)
+      document.getElementById("over-billion-module").classList.toggle("hidden");
+      document.getElementById("shade").classList.toggle("hidden");
+    }, 2000);
 
-    return
-  } 
-  
-  if (monthlyCap) {
-    checkCap(item, amount, category, date)
-  } else {
-    addNewExpense(item, amount, category, date)
+    return;
   }
-}
+
+  if (monthlyCap) {
+    checkCap(item, amount, category, date);
+  } else {
+    addNewExpense(item, amount, category, date);
+  }
+};
 
 const checkCap = (item, amount, category, date) => {
-  const total = getTotalSpent(expensesArray)
-  const capModal = document.getElementById("cap-warning")
-  const yesBtn = document.getElementById("warning-yes-btn")
-  const noBtn = document.getElementById("warning-no-btn")
+  const total = getTotalSpent(expensesArray);
+  const capModal = document.getElementById("cap-warning");
+  const yesBtn = document.getElementById("warning-yes-btn");
+  const noBtn = document.getElementById("warning-no-btn");
 
   const cleanUp = () => {
-    capModal.classList.toggle("hidden")
-    yesBtn.removeEventListener("click", handleCapYesResponse)
-    noBtn.removeEventListener("click", handleCapNoResponse)
-  }
+    capModal.classList.toggle("hidden");
+    yesBtn.removeEventListener("click", handleCapYesResponse);
+    noBtn.removeEventListener("click", handleCapNoResponse);
+  };
 
   const handleCapYesResponse = () => {
-    addNewExpense(item, amount, category, date)
-    cleanUp()
-  }
+    addNewExpense(item, amount, category, date);
+    cleanUp();
+  };
 
   const handleCapNoResponse = () => {
-    cleanUp()
-  }
+    cleanUp();
+  };
 
   if (total + amount > monthlyCap) {
-    capModal.classList.toggle("hidden")
-    yesBtn.addEventListener("click", handleCapYesResponse)
-    noBtn.addEventListener("click", handleCapNoResponse)
+    capModal.classList.toggle("hidden");
+    yesBtn.addEventListener("click", handleCapYesResponse);
+    noBtn.addEventListener("click", handleCapNoResponse);
   } else {
-    addNewExpense(item, amount, category, date)
+    addNewExpense(item, amount, category, date);
   }
-}
-
+};
 
 function exportToCSV(data) {
-  if (!data.length) return
+  if (!data.length) return;
 
-  const cleanedData = data.map(({ id, ...rest }) => rest)
+  const cleanedData = data.map(({ id, ...rest }) => rest);
 
-  const headers = Object.keys(cleanedData[0]).join(",")
-  const rows = cleanedData.map(obj =>
-    Object.values(obj).map(val => `"${val}"`).join(",")
-  )
-  const csv = [headers, ...rows].join("\n")
+  const headers = Object.keys(cleanedData[0]).join(",");
+  const rows = cleanedData.map((obj) =>
+    Object.values(obj)
+      .map((val) => `"${val}"`)
+      .join(",")
+  );
+  const csv = [headers, ...rows].join("\n");
 
-  const blob = new Blob([csv], { type: "text/csv" })
-  const url = URL.createObjectURL(blob)
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a")
-  a.href = url
-  a.download = "expenses.csv"
-  a.click()
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "expenses.csv";
+  a.click();
 
-  URL.revokeObjectURL(url)
+  URL.revokeObjectURL(url);
 }
 
 const toggleDarkMode = () => {
-  darkModeBtn.textContent = darkMode ? "Light" : "Dark"
-  document.querySelector("body").classList.toggle("dark-theme")
-  darkModeBtn.classList.toggle("dark-theme-chart")
-  settengsBtn.classList.toggle("dark-theme-chart")
-  document.getElementById("download-icon").classList.toggle("dark-icon")
-  document.querySelector("main").classList.toggle("dark-theme")
-  document.getElementById("data-placeholder").classList.toggle("dark-theme-chart")
-  document.getElementById("form-btn").classList.toggle("dark-theme-chart")
-  document.getElementById("total").classList.toggle("dark-theme-chart")
-  document.getElementById("amount").classList.toggle("dark-theme-chart")
-  document.getElementById("item").classList.toggle("dark-theme-chart")
-  document.getElementById("date").classList.toggle("dark-theme-chart")
-  categoryFilter.classList.toggle("dark-theme-chart")
-  periodFilter.classList.toggle("dark-theme-chart")
-  const details = document.getElementById("expense-details")
-  document.querySelector("select").classList.toggle("dark-theme-chart")
+  darkModeBtn.textContent = darkMode ? "Light" : "Dark";
+  document.querySelector("body").classList.toggle("dark-theme");
+  darkModeBtn.classList.toggle("dark-theme-chart");
+  settengsBtn.classList.toggle("dark-theme-chart");
+  document.getElementById("download-icon").classList.toggle("dark-icon");
+  document.querySelector("main").classList.toggle("dark-theme");
+  document
+    .getElementById("data-placeholder")
+    .classList.toggle("dark-theme-chart");
+  document.getElementById("form-btn").classList.toggle("dark-theme-chart");
+  document.getElementById("total").classList.toggle("dark-theme-chart");
+  document.getElementById("amount").classList.toggle("dark-theme-chart");
+  document.getElementById("item").classList.toggle("dark-theme-chart");
+  document.getElementById("date").classList.toggle("dark-theme-chart");
+  categoryFilter.classList.toggle("dark-theme-chart");
+  periodFilter.classList.toggle("dark-theme-chart");
+  const details = document.getElementById("expense-details");
+  document.querySelector("select").classList.toggle("dark-theme-chart");
 
   if (details) {
-    details.style.backgroundColor = darkMode ? "#000872" : "unset"
+    details.style.backgroundColor = darkMode ? "#000872" : "unset";
   }
 
-  filterItems()
+  filterItems();
 
-  darkMode = !darkMode
-  saveTheme()
-}
+  darkMode = !darkMode;
+  saveTheme();
+};
 
 const checkDarkMode = () => {
   if (darkMode) {
-    toggleDarkMode()
-    darkMode = true
-    saveTheme()
+    toggleDarkMode();
+    darkMode = true;
+    saveTheme();
   } else {
-    return
+    return;
   }
-}
-
+};
 
 const getCategoryBreakdown = (arr) => {
-  const totals = {}
+  const totals = {};
 
-  arr.forEach(expense => {
+  arr.forEach((expense) => {
     if (!totals[expense.category]) {
-      totals[expense.category] = 0
+      totals[expense.category] = 0;
     }
-    totals[expense.category] += expense.amount
-  })
+    totals[expense.category] += expense.amount;
+  });
 
-  return totals
-}
+  return totals;
+};
 
 const renderChart = (arr) => {
-  const breakdown = getCategoryBreakdown(arr)
+  const breakdown = getCategoryBreakdown(arr);
 
-  const ctx = document.getElementById('category-chart').getContext('2d')
+  const ctx = document.getElementById("category-chart").getContext("2d");
 
-  const labels = Object.keys(breakdown)
-  const data = Object.values(breakdown)
+  const labels = Object.keys(breakdown);
+  const data = Object.values(breakdown);
 
   if (chartInstance) {
-    chartInstance.destroy()
+    chartInstance.destroy();
   }
 
   chartInstance = new Chart(ctx, {
-    type: 'pie',
+    type: "pie",
     data: {
       labels: labels,
-      datasets: [{
-        label: 'Expenses by Category',
-        data: data,
-        backgroundColor: [
-          '#FF6384',
-          '#36A2EB',
-          '#FFCE56',
-          '#4BC0C0',
-          '#9966FF',
-          '#FF9F40'
-        ],
-        borderWidth: 1
-      }]
+      datasets: [
+        {
+          label: "Expenses by Category",
+          data: data,
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9F40",
+          ],
+          borderWidth: 1,
+        },
+      ],
     },
     options: {
       responsive: true,
       plugins: {
         legend: {
-          position: 'bottom'
-        }
-      }
-    }
-  })
-}
-
+          position: "bottom",
+        },
+      },
+    },
+  });
+};
 
 const filterItems = () => {
   const filteredByCategory = expensesArray.filter((expense) => {
-    return caterFilter === "All categories" || expense.category === caterFilter
-  })
+    return caterFilter === "All categories" || expense.category === caterFilter;
+  });
 
   const filteredByDate = filteredByCategory.filter((expense) => {
-    return expense.date >= periodFilterValue
-  })
+    return expense.date >= periodFilterValue;
+  });
 
-  renderApp(filteredByDate, caterFilter)
-}
+  renderApp(filteredByDate, caterFilter);
+};
 
 const addNewExpense = (name, amount, category, date) => {
   expensesArray.push({
@@ -274,164 +271,166 @@ const addNewExpense = (name, amount, category, date) => {
     item: name,
     amount: amount,
     category: category,
-    date: date
-  })
+    date: date,
+  });
 
-  saveExpenses()
-  filterItems()
-}
+  saveExpenses();
+  filterItems();
+};
 
 const deleteExpense = (expenseId) => {
   const updatedArr = expensesArray.filter((expense) => {
-    return expense.id !== expenseId
-  })
+    return expense.id !== expenseId;
+  });
 
-  expensesArray = updatedArr
-  saveExpenses()
-  filterItems()
-}
-
+  expensesArray = updatedArr;
+  saveExpenses();
+  filterItems();
+};
 
 const getTotalSpent = (arr) => {
   const totalInCents = arr.reduce((total, current) => {
-    return total + Math.round(current.amount * 100)
-  }, 0)
+    return total + Math.round(current.amount * 100);
+  }, 0);
 
-  const total = totalInCents / 100
+  const total = totalInCents / 100;
 
-  return total
-}
+  return total;
+};
 
-const renderExpenses = (itemsArr, categoryText="All categories") => {
-  const container = document.getElementById("all-expenses")
+const renderExpenses = (itemsArr, categoryText = "All categories") => {
+  const container = document.getElementById("all-expenses");
 
   if (itemsArr.length === 0) {
     container.innerHTML = `<p>${categoryText}</p>
                            <p>No items found</p>
-                          `
-    document.getElementById("data-placeholder").style.display = "flex"
+                          `;
+    document.getElementById("data-placeholder").style.display = "flex";
   } else {
-    container.innerHTML = `<p>${categoryText}</p>`
-    document.getElementById("data-placeholder").style.display = "none"
+    container.innerHTML = `<p>${categoryText}</p>`;
+    document.getElementById("data-placeholder").style.display = "none";
   }
 
   itemsArr.forEach((expense) => {
-    const expenseDiv = document.createElement("div")
-    expenseDiv.classList.add("expense")
+    const expenseDiv = document.createElement("div");
+    expenseDiv.classList.add("expense");
 
-    const dateP = document.createElement("p")
-    dateP.textContent = expense.date
+    const dateP = document.createElement("p");
+    dateP.textContent = expense.date;
 
-    const detailsDiv = document.createElement("div")
-    detailsDiv.classList.add("expense-details")
-    detailsDiv.id = "expense-details"
+    const detailsDiv = document.createElement("div");
+    detailsDiv.classList.add("expense-details");
+    detailsDiv.id = "expense-details";
 
-    const lineOneDiv = document.createElement("div")
-    lineOneDiv.classList.add("details-line-one")
+    const lineOneDiv = document.createElement("div");
+    lineOneDiv.classList.add("details-line-one");
 
-    const itemSpan = document.createElement("span")
-    itemSpan.textContent = expense.item
+    const itemSpan = document.createElement("span");
+    itemSpan.textContent = expense.item;
 
-    const amountSpan = document.createElement("span")
-    amountSpan.classList.add("item-amount")
-    amountSpan.textContent = `$${expense.amount}`
+    const amountSpan = document.createElement("span");
+    amountSpan.classList.add("item-amount");
+    amountSpan.textContent = `$${expense.amount}`;
 
-    const deleteBtn = document.createElement("button")
-    deleteBtn.classList.add("delete-expense-btn")
-    deleteBtn.textContent = "Delete"
-    deleteBtn.dataset.id = expense.id
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-expense-btn");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.dataset.id = expense.id;
+    deleteBtn.ariaLabel = `Delete expense on ${expense.date} for ${expense.amount}`
 
-    lineOneDiv.append(itemSpan, amountSpan)
-    detailsDiv.append(lineOneDiv, deleteBtn)
-    expenseDiv.append(dateP, detailsDiv)
+    lineOneDiv.append(itemSpan, amountSpan);
+    detailsDiv.append(lineOneDiv, deleteBtn);
+    expenseDiv.append(dateP, detailsDiv);
 
-    container.appendChild(expenseDiv)
-  })
-}
+    container.appendChild(expenseDiv);
+  });
+};
 
 const renderTotalSpent = (arr) => {
-  const totalSum = getTotalSpent(arr)
-  document.getElementById("total").textContent = `Total Spent: $${totalSum}`
-}
+  const totalSum = getTotalSpent(arr);
+  document.getElementById("total").textContent = `Total Spent: $${totalSum}`;
+};
 
 const clearForm = () => {
-  document.getElementById("item").value = ""
-  document.getElementById("amount").value = ""
-  document.getElementById("category").selectedIndex = 0
-  document.getElementById('date').value = today;
-}
+  document.getElementById("item").value = "";
+  document.getElementById("amount").value = "";
+  document.getElementById("category").selectedIndex = 0;
+  document.getElementById("date").value = today;
+};
 
 const renderApp = (arr, categoryText) => {
-  renderExpenses(arr, categoryText)
-  renderTotalSpent(arr)
-  renderChart(arr)
-}
+  renderExpenses(arr, categoryText);
+  renderTotalSpent(arr);
+  renderChart(arr);
+};
 
 // Event Listeners
 
 amountInput.addEventListener("input", () => {
-  let value = amountInput.value
-  value = value.replace(/[^0-9.]/g, '')
-  
-  const dotCount = value.split('.').length - 1;
+  let value = amountInput.value;
+  value = value.replace(/[^0-9.]/g, "");
+
+  const dotCount = value.split(".").length - 1;
   if (dotCount > 1) {
-    value = value.slice(0, value.lastIndexOf('.'))
+    value = value.slice(0, value.lastIndexOf("."));
   }
 
   amountInput.value = value;
 });
 
 form.addEventListener("submit", (e) => {
-  e.preventDefault()
+  e.preventDefault();
 
-  const formData = new FormData(form)
+  const formData = new FormData(form);
 
-  const item = formData.get("item").trim().replace(/\s+/g, " ")
-  const number = formData.get("amount")
-  const category = formData.get("category")
-  const date = formData.get("date")
+  const item = formData.get("item").trim().replace(/\s+/g, " ");
+  const number = formData.get("amount");
+  const category = formData.get("category");
+  const date = formData.get("date");
 
-  const amount = Number(parseFloat(number).toFixed(2))
+  const amount = Number(parseFloat(number).toFixed(2));
 
-  checkAmount(item, amount, category, date)
-  clearForm()
-})
+  checkAmount(item, amount, category, date);
+  clearForm();
+});
 
 document.addEventListener("click", (e) => {
   if (e.target.id === "shade") {
-    return
+    return;
   } else if (e.target.dataset.id) {
-    deleteExpense(e.target.dataset.id)
+    deleteExpense(e.target.dataset.id);
   }
-})
+});
 
 categoryFilter.addEventListener("change", (e) => {
-  caterFilter = e.target.value
-  filterItems()
-})
+  caterFilter = e.target.value;
+  filterItems();
+});
 
 periodFilter.addEventListener("change", (e) => {
-  const selectedValue = e.target.value
-  const date = new Date(today)
-  date.setDate(date.getDate() - Number(selectedValue))
-  periodFilterValue = date.toISOString().split('T')[0]
-  filterItems()
-})
+  const selectedValue = e.target.value;
+  const date = new Date(today);
+  date.setDate(date.getDate() - Number(selectedValue));
+  periodFilterValue = date.toISOString().split("T")[0];
+  filterItems();
+});
 
-darkModeBtn.addEventListener("click", toggleDarkMode)
+darkModeBtn.addEventListener("click", toggleDarkMode);
 document.getElementById("export-btn").addEventListener("click", () => {
-  exportToCSV(expensesArray)
-})
+  exportToCSV(expensesArray);
+});
 
-settengsBtn.addEventListener("click", toggleSettingsModule)
+settengsBtn.addEventListener("click", toggleSettingsModule);
 
-document.getElementById("set-btn").addEventListener("click", setMonthlyCap)
+document.getElementById("set-btn").addEventListener("click", setMonthlyCap);
 
-document.getElementById("cancel-btn").addEventListener("click", toggleSettingsModule)
+document
+  .getElementById("cancel-btn")
+  .addEventListener("click", toggleSettingsModule);
 
-document.getElementById("remove-cap-btn").addEventListener("click", removeCap)
+document.getElementById("remove-cap-btn").addEventListener("click", removeCap);
 
 // Function Calls
 
-renderApp(expensesArray)
-checkDarkMode()
+renderApp(expensesArray);
+checkDarkMode();

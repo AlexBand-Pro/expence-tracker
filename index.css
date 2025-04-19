@@ -30,6 +30,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: 1px solid rgb(233, 233, 233);
 }
 
 .width-setter-div {
