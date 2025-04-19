@@ -41,7 +41,6 @@ const storedTheme = localStorage.getItem("theme")
 
 if (storedTheme) {
   darkMode = JSON.parse(storedTheme)
-  console.log(darkMode)
 }
 
 // Add a message to tell the user there's no data, if theer is none.
@@ -165,6 +164,7 @@ function exportToCSV(data) {
 
 const toggleDarkMode = () => {
   darkModeBtn.textContent = darkMode ? "Light" : "Dark"
+  document.querySelector("body").classList.toggle("dark-theme")
   darkModeBtn.classList.toggle("dark-theme-chart")
   settengsBtn.classList.toggle("dark-theme-chart")
   document.getElementById("download-icon").classList.toggle("dark-icon")

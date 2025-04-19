@@ -29,7 +29,9 @@
   </head>
   <body>
     <header>
-      <h1>ExpenseTracker</h1>
+      <div class="width-setter-div">
+        <h1>ExpenseTracker</h1>
+      </div>
     </header>
     <main>
       <div class="canvas-wrapper">
@@ -43,43 +45,67 @@
         </div>
       </div>
 
-      <div class="dark-mode-wrapper">
-        <button id="dark-mode-btn" class="dark-mode-btn">Light</button>
-        <button id="settings" class="settings-btn">Monthly Cap</button>
-        <div id="cap-setter" class="cap-setter hidden">
-          <input type="number" id="cap" name="cap" placeholder="Amount" />
-          <div class="cap-btns">
-            <button id="set-btn" class="set-btn">Set</button>
-            <button id="remove-cap-btn" class="remove-cap-btn">Remove</button>
-            <button id="cancel-btn" class="cancel-btn">Cancel</button>
+      <div class="content-settigns-content">
+        <div class="dark-mode-wrapper">
+          <button id="dark-mode-btn" class="dark-mode-btn">Light</button>
+          <button id="settings" class="settings-btn">Monthly Cap</button>
+          <div id="cap-setter" class="cap-setter hidden">
+            <input type="number" id="cap" name="cap" placeholder="Amount" />
+            <div class="cap-btns">
+              <button id="set-btn" class="set-btn">Set</button>
+              <button id="remove-cap-btn" class="remove-cap-btn">Remove</button>
+              <button id="cancel-btn" class="cancel-btn">Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div id="success-module" class="success-module hidden">
-        <p>Success!</p>
-      </div>
-
-      <div id="shade" class="shade hidden"></div>
-
-      <div id="over-billion-module" class="over-billion-module hidden">
-        <p>Really? You buying a country?</p>
-      </div>
-
-      <div id="cap-warning" class="cap-warning hidden">
-        <p>You are about to exceed your monthly cap. Are you sure you want to continue?</p>
-        <div class="cap-warning-btn">
-          <button id="warning-yes-btn" class="warning-yes-btn">Yes</button>
-          <button id="warning-no-btn" class="warning-no-btn">No</button>
+  
+        <div id="success-module" class="success-module hidden">
+          <p>Success!</p>
         </div>
-      </div>
-
-      <div class="add-expense-container">
-        <form>
-          <input type="text" id="item" name="item" placeholder="Item" maxlength="30" required/>
-          <input type="text" id="amount" name="amount" placeholder="Amount" required/>
-          <select id="category" name="category" required>
-            <option value="" disabled selected>-- select category --</option>
+  
+        <div id="shade" class="shade hidden"></div>
+  
+        <div id="over-billion-module" class="over-billion-module hidden">
+          <p>Really? You buying a country?</p>
+        </div>
+  
+        <div id="cap-warning" class="cap-warning hidden">
+          <p>You are about to exceed your monthly cap. Are you sure you want to continue?</p>
+          <div class="cap-warning-btn">
+            <button id="warning-yes-btn" class="warning-yes-btn">Yes</button>
+            <button id="warning-no-btn" class="warning-no-btn">No</button>
+          </div>
+        </div>
+  
+        <div class="add-expense-container">
+          <form>
+            <input type="text" id="item" name="item" placeholder="Item" maxlength="30" required/>
+            <input type="text" id="amount" name="amount" placeholder="Amount" required/>
+            <select id="category" name="category" required>
+              <option value="" disabled selected>-- select category --</option>
+              <option value="Housing">Housing</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Food">Food</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Health">Health</option>
+              <option value="Personal & Household">Personal & Household</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Travel">Travel</option>
+              <option value="Savings & Investments">Savings & Investments</option>
+              <option value="Debt Payments">Debt Payments</option>
+              <option value="Education">Education</option>
+              <option value="Gifts & Donations">Gifts & Donations</option>
+              <option value="Pets">Pets</option>
+              <option value="Kids">Kids</option>
+              <option value="Bills">Bills</option>
+            </select>
+            <input type="date" id="date" name="date" required>
+            <button id="form-btn">Add Expense</button>
+          </form>
+        </div>
+        <div class="filter">
+          <select name="category-filter" id="category-filter" required>
+            <option value="All categories">All categories</option>
             <option value="Housing">Housing</option>
             <option value="Utilities">Utilities</option>
             <option value="Food">Food</option>
@@ -96,40 +122,19 @@
             <option value="Kids">Kids</option>
             <option value="Bills">Bills</option>
           </select>
-          <input type="date" id="date" name="date" required>
-          <button id="form-btn">Add Expense</button>
-        </form>
+          <select name="period-filter" id="period-filter" required>
+            <option value="48000">Lifetime</option>
+            <option value="90">90 days</option>
+            <option value="30">30 days</option>
+            <option value="7">7 days</option>
+            <option value="1">1 day</option>
+          </select>
+        </div>
+        <div class="total-spent">
+          <p class="total" id="total">Total Spent: $0.00</p>
+        </div>
       </div>
-      <div class="filter">
-        <select name="category-filter" id="category-filter" required>
-          <option value="All categories">All categories</option>
-          <option value="Housing">Housing</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Food">Food</option>
-          <option value="Transportation">Transportation</option>
-          <option value="Health">Health</option>
-          <option value="Personal & Household">Personal & Household</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Travel">Travel</option>
-          <option value="Savings & Investments">Savings & Investments</option>
-          <option value="Debt Payments">Debt Payments</option>
-          <option value="Education">Education</option>
-          <option value="Gifts & Donations">Gifts & Donations</option>
-          <option value="Pets">Pets</option>
-          <option value="Kids">Kids</option>
-          <option value="Bills">Bills</option>
-        </select>
-        <select name="period-filter" id="period-filter" required>
-          <option value="48000">Lifetime</option>
-          <option value="90">90 days</option>
-          <option value="30">30 days</option>
-          <option value="7">7 days</option>
-          <option value="1">1 day</option>
-        </select>
-      </div>
-      <div class="total-spent">
-        <p class="total" id="total">Total Spent: $0.00</p>
-      </div>
+
       <div class="all-expenses" id="all-expenses">
         <p>Expenses:</p>
       </div>
