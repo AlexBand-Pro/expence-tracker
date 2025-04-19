@@ -20,12 +20,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body>
     <header>
       <h1>ExpenseTracker</h1>
     </header>
     <main>
+      <div class="canvas-wrapper">
+        <button id="export-btn" class="export-btn">
+          <i id="download-icon" class="fa-solid fa-circle-down fa-2x"></i>
+        </button>
+        <canvas id="category-chart"></canvas>
+        <div id="data-placeholder" class="chart-place-holder">
+          <p>Your data</p>
+          <p>will appear here</p>
+        </div>
+      </div>
+
+      <div class="dark-mode-wrapper">
+        <button id="dark-mode-btn" class="dark-mode-btn">Light</button>
+        <button id="settings" class="settings-btn">Monthly Cap</button>
+      </div>
+
       <div class="add-expense-container">
         <form>
           <input type="text" id="item" name="item" placeholder="Item" maxlength="30" required/>
@@ -49,7 +71,7 @@
             <option value="Bills">Bills</option>
           </select>
           <input type="date" id="date" name="date" required>
-          <button>Add Expense</button>
+          <button id="form-btn">Add Expense</button>
         </form>
       </div>
       <div class="filter">

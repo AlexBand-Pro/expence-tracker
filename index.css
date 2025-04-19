@@ -45,11 +45,16 @@ main {
 .add-expense-container,
 .filter,
 .total-spent,
-.all-expenses {
+.all-expenses,
+.dark-mode-wrapper {
   padding: 1em;
   display: flex;
   flex-direction: column;
-  /* gap: 1em; */
+}
+
+.dark-mode-wrapper {
+  flex-direction: row;
+  gap: 1em;
 }
 
 .all-expenses {
@@ -86,10 +91,24 @@ form>select,
 form>button,
 .filter>select,
 .expense-details,
-.total-spent>p {
+.total-spent>p,
+.dark-mode-btn, 
+.settings-btn {
   border-radius: 0.5em;
   border: 1px solid rgb(211, 211, 211);
   padding: 0.7em 0.5em;
+}
+
+.dark-mode-btn, .settings-btn {
+  background-color: white;
+}
+
+.dark-mode-btn{
+  width: 70px;
+}
+
+.settings-btn {
+  width: 100px;
 }
 
 form>input,
@@ -101,12 +120,21 @@ form>button,
   width: 100%;
 }
 
+.dark-mode-wrapper {
+  width: 100%;
+}
+
 form>button {
   background-color: rgb(45, 111, 197);
   color: whitesmoke;
   font-weight: 500;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.05em;
+  transition: 0.2s;
+}
+
+form>button:active {
+  background-color: rgb(58, 197, 45);
 }
 
 .total-spent>p {
@@ -130,15 +158,16 @@ form>button {
   text-transform: capitalize;
 }
 
-.details-line-one > .item-amount {
+.details-line-one>.item-amount {
   font-weight: 700;
 }
 
-.expense>p, .all-expenses > p {
+.expense>p,
+.all-expenses>p {
   font-weight: 700;
 }
 
-.all-expenses > p {
+.all-expenses>p {
   font-size: 1.3rem;
 }
 
@@ -149,4 +178,58 @@ form>button {
   color: whitesmoke;
   padding: 0.3em 0.4em;
   font-weight: 500;
+}
+
+.canvas-wrapper {
+  width: 200px;
+  height: 200px;
+  margin: 1.5em auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-place-holder {
+  width: 175px;
+  height: 175px;
+  background-color: rgb(45, 111, 197);
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.export-btn {
+  position: absolute;
+  top: 0;
+  left: -20px;
+  background-color: transparent;
+  border: none;
+}
+
+/* Dark Theme */
+
+.dark-theme {
+  background-color: #0d0d28;
+  color: whitesmoke;
+}
+
+.dark-theme-chart {
+  background-color: #000872;
+  color: whitesmoke;
+  color-scheme: dark;
+}
+
+.dark-theme-chart::placeholder {
+  color: whitesmoke;
+}
+
+.dark-icon {
+  color: whitesmoke;
 }
