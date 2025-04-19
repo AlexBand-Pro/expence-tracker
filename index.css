@@ -92,18 +92,24 @@ form>button,
 .filter>select,
 .expense-details,
 .total-spent>p,
-.dark-mode-btn, 
-.settings-btn {
+.dark-mode-btn,
+.settings-btn,
+.cap-setter,
+#cap,
+.success-module,
+.cap-btns>button,
+#cap, .cap-warning-btn > button {
   border-radius: 0.5em;
   border: 1px solid rgb(211, 211, 211);
   padding: 0.7em 0.5em;
 }
 
-.dark-mode-btn, .settings-btn {
+.dark-mode-btn,
+.settings-btn {
   background-color: white;
 }
 
-.dark-mode-btn{
+.dark-mode-btn {
   width: 70px;
 }
 
@@ -213,6 +219,99 @@ form>button:active {
   border: none;
 }
 
+.cap-setter,
+.success-module,
+.over-billion-module,
+.cap-warning {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+}
+
+.cap-setter {
+  background-color: rgb(241, 241, 241);
+  min-width: 290px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.cap-btns {
+  display: flex;
+  gap: 0.5em;
+}
+
+.cap-btns>button {
+  border-radius: 0.3em;
+  border: none;
+  color: whitesmoke;
+  flex: 1;
+  font-weight: 500;
+}
+
+.set-btn {
+  background-color: rgb(45, 111, 197);
+}
+
+.remove-cap-btn {
+  background-color: rgb(180, 48, 48);
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+}
+
+#cap {
+  flex: 1;
+}
+
+
+.success-module {
+  padding: 1em;
+  background-color: #28a746;
+  color: whitesmoke;
+  letter-spacing: 0.08em;
+  
+}
+
+.over-billion-module {
+  background-color: #a66cff;
+  color: rgb(255, 255, 255);
+  width: 80%;
+  padding: 1em;
+  border-radius: 0.5em;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.cap-warning {
+  background-color: #ffe5b4;
+  padding: 1em;
+  min-width: 290px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  border-radius: 0.5em;
+  color: black;
+  font-weight: 500;
+  text-align: center;
+}
+
+.cap-warning-btn > button {
+  padding: 0.5em 1em;
+  color: white;
+}
+
+.warning-yes-btn {
+  background-color: #d9534f;
+}
+
+.warning-no-btn {
+  background-color: #6c757d;
+}
+
 /* Dark Theme */
 
 .dark-theme {
@@ -232,4 +331,20 @@ form>button:active {
 
 .dark-icon {
   color: whitesmoke;
+}
+
+/* Utility */
+
+.hidden {
+  display: none;
+}
+
+.shade {
+  background-color: black;
+  height: 100vh;
+  opacity: 0.4;
+  position: fixed;
+  width: 100%;
+  z-index: 99;
+  top: 0;
 }

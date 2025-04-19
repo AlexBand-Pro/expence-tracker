@@ -46,6 +46,32 @@
       <div class="dark-mode-wrapper">
         <button id="dark-mode-btn" class="dark-mode-btn">Light</button>
         <button id="settings" class="settings-btn">Monthly Cap</button>
+        <div id="cap-setter" class="cap-setter hidden">
+          <input type="number" id="cap" name="cap" placeholder="Amount" />
+          <div class="cap-btns">
+            <button id="set-btn" class="set-btn">Set</button>
+            <button id="remove-cap-btn" class="remove-cap-btn">Remove</button>
+            <button id="cancel-btn" class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="success-module" class="success-module hidden">
+        <p>Success!</p>
+      </div>
+
+      <div id="shade" class="shade hidden"></div>
+
+      <div id="over-billion-module" class="over-billion-module hidden">
+        <p>Really? You buying a country?</p>
+      </div>
+
+      <div id="cap-warning" class="cap-warning hidden">
+        <p>You are about to exceed your monthly cap. Are you sure you want to continue?</p>
+        <div class="cap-warning-btn">
+          <button id="warning-yes-btn" class="warning-yes-btn">Yes</button>
+          <button id="warning-no-btn" class="warning-no-btn">No</button>
+        </div>
       </div>
 
       <div class="add-expense-container">

@@ -17,30 +17,133 @@ if (stored) {
   expensesArray = JSON.parse(stored)
 }
 
-const saveExpenses = () => {
-  localStorage.setItem("expenses", JSON.stringify(expensesArray))
-}
-
 const amountInput = document.getElementById("amount");
 
 const darkModeBtn = document.getElementById("dark-mode-btn")
 
+const settengsBtn = document.getElementById("settings")
+
+const capAmount = document.getElementById("cap")
+
 let chartInstance = null
 
-// Dark Mode
+let monthlyCap = null
+
+const storedCap = localStorage.getItem("cap")
+
+if (storedCap) {
+  monthlyCap = JSON.parse(storedCap)
+}
+
 let darkMode = false
+
+const storedTheme = localStorage.getItem("theme")
+
+if (storedTheme) {
+  darkMode = JSON.parse(storedTheme)
+  console.log(darkMode)
+}
 
 // Add a message to tell the user there's no data, if theer is none.
 //add filters to local storage
 //make the chart placeholder appear smoother. Don't remove it from the page, make it unvisible with classes and add transition
 
-// Functions
+// 
+
+const saveCap = () => {
+  localStorage.setItem("cap", JSON.stringify(monthlyCap))
+}
+
+const saveExpenses = () => {
+  localStorage.setItem("expenses", JSON.stringify(expensesArray))
+}
+
+const saveTheme = () => {
+  localStorage.setItem("theme", JSON.stringify(darkMode))
+}
+
+const setMonthlyCap = () => {
+  monthlyCap = Number(capAmount.value)
+  saveCap()
+  capAmount.value = ""
+  handleModuleDisplay()
+}
+
+const handleModuleDisplay = () => {
+  document.getElementById("cap-setter").classList.toggle("hidden")
+  document.getElementById("success-module").classList.toggle("hidden")
+
+  setTimeout(() => {
+    document.getElementById("success-module").classList.toggle("hidden")
+    document.getElementById("shade").classList.toggle("hidden")
+  }, 1000)
+}
+
+const removeCap = () => {
+  monthlyCap = null
+  saveCap()
+  handleModuleDisplay()
+}
+
+const toggleSettingsModule = () => {
+  document.getElementById("cap-setter").classList.toggle("hidden")
+  document.getElementById("shade").classList.toggle("hidden")
+}
+
+const checkAmount = (item, amount, category, date) => {
+  if (amount >= 1000000000) {
+    document.getElementById("over-billion-module").classList.toggle("hidden")
+    document.getElementById("shade").classList.toggle("hidden")
+
+    setTimeout(() => {
+      document.getElementById("over-billion-module").classList.toggle("hidden")
+      document.getElementById("shade").classList.toggle("hidden")
+    }, 2000)
+
+    return
+  } 
+  
+  if (monthlyCap) {
+    checkCap(item, amount, category, date)
+  } else {
+    addNewExpense(item, amount, category, date)
+  }
+}
+
+const checkCap = (item, amount, category, date) => {
+  const total = getTotalSpent(expensesArray)
+  const capModal = document.getElementById("cap-warning")
+  const yesBtn = document.getElementById("warning-yes-btn")
+  const noBtn = document.getElementById("warning-no-btn")
+
+  const cleanUp = () => {
+    capModal.classList.toggle("hidden")
+    yesBtn.removeEventListener("click", handleCapYesResponse)
+    noBtn.removeEventListener("click", handleCapNoResponse)
+  }
+
+  const handleCapYesResponse = () => {
+    addNewExpense(item, amount, category, date)
+    cleanUp()
+  }
+
+  const handleCapNoResponse = () => {
+    cleanUp()
+  }
+
+  if (total + amount > monthlyCap) {
+    capModal.classList.toggle("hidden")
+    yesBtn.addEventListener("click", handleCapYesResponse)
+    noBtn.addEventListener("click", handleCapNoResponse)
+  } else {
+    addNewExpense(item, amount, category, date)
+  }
+}
 
 
 function exportToCSV(data) {
   if (!data.length) return
 
-  // Remove 'id' from each item
   const cleanedData = data.map(({ id, ...rest }) => rest)
 
   const headers = Object.keys(cleanedData[0]).join(",")
@@ -63,7 +166,7 @@ function exportToCSV(data) {
 const toggleDarkMode = () => {
   darkModeBtn.textContent = darkMode ? "Light" : "Dark"
   darkModeBtn.classList.toggle("dark-theme-chart")
-  document.getElementById("settings").classList.toggle("dark-theme-chart")
+  settengsBtn.classList.toggle("dark-theme-chart")
   document.getElementById("download-icon").classList.toggle("dark-icon")
   document.querySelector("main").classList.toggle("dark-theme")
   document.getElementById("data-placeholder").classList.toggle("dark-theme-chart")
@@ -84,6 +187,17 @@ const toggleDarkMode = () => {
   filterItems()
 
   darkMode = !darkMode
+  saveTheme()
+}
+
+const checkDarkMode = () => {
+  if (darkMode) {
+    toggleDarkMode()
+    darkMode = true
+    saveTheme()
+  } else {
+    return
+  }
 }
 
 
@@ -185,8 +299,6 @@ const getTotalSpent = (arr) => {
 
   const total = totalInCents / 100
 
-  console.log(total)
-
   return total
 }
 
@@ -194,7 +306,9 @@ const renderExpenses = (itemsArr, categoryText="All categories") => {
   const container = document.getElementById("all-expenses")
 
   if (itemsArr.length === 0) {
-    container.innerHTML = ""
+    container.innerHTML = `<p>${categoryText}</p>
+                           <p>No items found</p>
+                          `
     document.getElementById("data-placeholder").style.display = "flex"
   } else {
     container.innerHTML = `<p>${categoryText}</p>`
@@ -279,12 +393,14 @@ form.addEventListener("submit", (e) => {
 
   const amount = Number(parseFloat(number).toFixed(2))
 
-  addNewExpense(item, amount, category, date)
+  checkAmount(item, amount, category, date)
   clearForm()
 })
 
 document.addEventListener("click", (e) => {
-  if (e.target.dataset.id) {
+  if (e.target.id === "shade") {
+    return
+  } else if (e.target.dataset.id) {
     deleteExpense(e.target.dataset.id)
   }
 })
@@ -307,6 +423,15 @@ document.getElementById("export-btn").addEventListener("click", () => {
   exportToCSV(expensesArray)
 })
 
+settengsBtn.addEventListener("click", toggleSettingsModule)
+
+document.getElementById("set-btn").addEventListener("click", setMonthlyCap)
+
+document.getElementById("cancel-btn").addEventListener("click", toggleSettingsModule)
+
+document.getElementById("remove-cap-btn").addEventListener("click", removeCap)
+
 // Function Calls
 
 renderApp(expensesArray)
+checkDarkMode()
