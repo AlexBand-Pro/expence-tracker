@@ -7,6 +7,8 @@ const form = document.querySelector("form");
 const categoryFilter = document.getElementById("category-filter");
 const periodFilter = document.getElementById("period-filter");
 
+const mainContent = document.querySelector("main");
+
 let expensesArray = [];
 let caterFilter = "All categories";
 let periodFilterValue = "1925-04-18";
@@ -45,6 +47,8 @@ if (monthlyCap) {
   currentCap.style.display = "none"
 }
 
+settingsBtn.setAttribute("aria-label", `Click to set monthly cap. Current monthly cap is ${monthlyCap}`)
+
 let darkMode = false;
 
 const storedTheme = localStorage.getItem("theme");
@@ -63,8 +67,8 @@ function setupExpensesContainer(itemsArr, categoryText = "All categories") {
     itemsArr.length === 0 ? "flex" : "none"
   container.insertAdjacentHTML(
     "beforeend",
-    `<p>${categoryText}</p>
-     <div id="expense-list" class="expense-list"></div>`
+    `<h2 id="category-heading">${categoryText}</h2>
+     <ul id="expense-list" aria-labelledby="category-heading"" class="expense-list"></ul>`
   )
 }
 
@@ -72,9 +76,9 @@ function renderVirtualList(data) {
   const rowHeight = 130;
   const buffer = 5;
   const container = document.getElementById("all-expenses");
-  const list = document.getElementById("expense-list");
+  const expenseList = document.getElementById("expense-list");
 
-  list.style.height = data.length * rowHeight + "px";
+  expenseList.style.height = data.length * rowHeight + "px";
 
   function updateVisibleItems() {
     const scrollTop = container.scrollTop;
@@ -84,21 +88,18 @@ function renderVirtualList(data) {
       Math.ceil((scrollTop + container.clientHeight) / rowHeight) + buffer
     );
 
-    list.innerHTML = "";
+    expenseList.innerHTML = "";
 
     for (let i = start; i < end; i++) {
       const expense = data[i];
 
-      const expenseList = document.createElement("div");
-      expenseList.classList.add("expense-list");
-      expenseList.style.position = "absolute";
-      expenseList.style.top = `${i * rowHeight}px`;
-      expenseList.style.left = "0";
-      expenseList.style.right = "0";
-      expenseList.style.height = `${rowHeight}px`;
-
-      const expenseDiv = document.createElement("div");
+      const expenseDiv = document.createElement("li");
       expenseDiv.classList.add("expense");
+      expenseDiv.style.position = "absolute";
+      expenseDiv.style.top = `${i * rowHeight}px`;
+      expenseDiv.style.left = "0";
+      expenseDiv.style.right = "0";
+      expenseDiv.style.height = `${rowHeight}px`;
 
       const dateP = document.createElement("p");
       dateP.textContent = expense.date;
@@ -128,8 +129,6 @@ function renderVirtualList(data) {
       detailsDiv.append(lineOneDiv, deleteBtn);
       expenseDiv.append(dateP, detailsDiv);
       expenseList.appendChild(expenseDiv);
-
-      list.appendChild(expenseList);
     }
   }
 
@@ -159,7 +158,8 @@ const setMonthlyCap = () => {
 };
 
 const handleModuleDisplay = () => {
-  document.getElementById("cap-setter").classList.toggle("hidden");
+  const capDialog = document.getElementById("cap-setter")
+  capDialog.classList.toggle("hidden");
   document.getElementById("success-module").classList.toggle("hidden");
 
   setTimeout(() => {
@@ -167,6 +167,7 @@ const handleModuleDisplay = () => {
     document.getElementById("shade").classList.toggle("hidden");
   }, 1000);
 };
+
 
 const removeCap = () => {
   monthlyCap = null;
@@ -176,10 +177,72 @@ const removeCap = () => {
   handleModuleDisplay();
 };
 
-const toggleSettingsModule = () => {
-  document.getElementById("cap-setter").classList.toggle("hidden");
-  document.getElementById("shade").classList.toggle("hidden");
-};
+function trapFocus(dialog) {
+  const focusableSelectors = `
+    a[href], area[href], input:not([disabled]), select:not([disabled]), 
+    textarea:not([disabled]), button:not([disabled]), 
+    iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable]
+  `;
+  const focusableElements = dialog.querySelectorAll(focusableSelectors);
+  const firstEl = focusableElements[0];
+  const lastEl = focusableElements[focusableElements.length - 1];
+
+  function handleTab(e) {
+    if (e.key === "Tab") {
+      if (e.shiftKey) {
+        // Shift + Tab
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        // Tab
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    } else if (e.key === "Escape") {
+      // Optional: Close the dialog with Esc
+      closeDialog();
+    }
+  }
+
+  dialog.addEventListener("keydown", handleTab);
+
+  // Return a cleanup function for later use
+  return () => {
+    dialog.removeEventListener("keydown", handleTab);
+  };
+}
+
+let cleanupFocusTrap;
+
+const openSettingsModal = () => {
+  const capDialog = document.getElementById("cap-setter");
+  capDialog.classList.remove("hidden");
+  capDialog.setAttribute("aria-hidden", "false");
+
+  mainContent.setAttribute("aria-hidden", "true");
+
+  capDialog.querySelector("input").focus();
+
+  document.getElementById("shade").classList.remove("hidden");
+
+  cleanupFocusTrap = trapFocus(capDialog);
+}
+
+const closeSettingsModal = () => {
+  const capDialog = document.getElementById("cap-setter");
+  capDialog.classList.add("hidden");
+  capDialog.setAttribute("aria-hidden", "true");
+  mainContent.setAttribute("aria-hidden", "false");
+  capDialog.querySelector("input").blur();
+
+  document.getElementById("shade").classList.add("hidden");
+
+  if (cleanupFocusTrap) cleanupFocusTrap();
+}
 
 const checkAmount = (item, amount, category, date) => {
   if (amount >= 1000000000) {
@@ -220,7 +283,12 @@ const checkCap = (item, amount, category, date) => {
   const noBtn = document.getElementById("warning-no-btn");
 
   const cleanUp = () => {
-    capModal.classList.toggle("hidden");
+    capModal.classList.add("hidden");
+    capModal.setAttribute("aria-hidden", "true");
+    mainContent.setAttribute("aria-hidden", "false");
+    document.getElementById("warning-yes-btn").focus();
+    if (cleanupFocusTrap) cleanupFocusTrap();
+    
     yesBtn.removeEventListener("click", handleCapYesResponse);
     noBtn.removeEventListener("click", handleCapNoResponse);
   };
@@ -235,7 +303,12 @@ const checkCap = (item, amount, category, date) => {
   };
 
   if (total + amount > monthlyCap) {
-    capModal.classList.toggle("hidden");
+    capModal.classList.remove("hidden");
+    capModal.setAttribute("aria-hidden", "false");
+    mainContent.setAttribute("aria-hidden", "true");
+    document.getElementById("warning-yes-btn").focus();
+    cleanupFocusTrap = trapFocus(capModal);
+
     yesBtn.addEventListener("click", handleCapYesResponse);
     noBtn.addEventListener("click", handleCapNoResponse);
   } else {
@@ -276,7 +349,10 @@ const toggleDarkMode = () => {
 };
 
 const updateElementsTheme = () => {
-  darkModeBtn.textContent = darkMode ? "Dark" : "Light";
+  const themeName = darkMode ? "Dark" : "Light"
+  darkModeBtn.textContent = themeName;
+  darkModeBtn.setAttribute("aria-label", `Click to toggle theme. Current theme is ${themeName}.`);
+
   document.querySelector("body").classList.toggle("dark-theme");
   darkModeBtn.classList.toggle("dark-theme-chart");
   settingsBtn.classList.toggle("dark-theme-chart");
@@ -483,13 +559,13 @@ document.getElementById("export-btn").addEventListener("click", () => {
   exportToCSV(expensesArray);
 });
 
-settingsBtn.addEventListener("click", toggleSettingsModule);
+settingsBtn.addEventListener("click", openSettingsModal);
 
 document.getElementById("set-btn").addEventListener("click", setMonthlyCap);
 
 document
   .getElementById("cancel-btn")
-  .addEventListener("click", toggleSettingsModule);
+  .addEventListener("click", closeSettingsModal);
 
 document.getElementById("remove-cap-btn").addEventListener("click", removeCap);
 

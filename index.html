@@ -50,12 +50,12 @@
       </div>
     </header>
     <main>
-      <div class="canvas-wrapper">
+      <div class="canvas-wrapper" aria-live="polite">
         <button id="export-btn" class="export-btn" aria-label="click to download a scv sheet of all your expenses to your computer">
           <i id="download-icon" class="fa-solid fa-circle-down fa-2x"></i>
         </button>
-        <canvas id="category-chart"></canvas>
-        <div id="data-placeholder" class="chart-place-holder">
+        <canvas id="category-chart" aria-label="Expenses by category"></canvas>
+        <div id="data-placeholder" class="chart-place-holder" aria-label="Expenses chart placeholder">
           <p>Your data</p>
           <p>will appear here</p>
         </div>
@@ -63,10 +63,11 @@
 
       <div class="content-settigns-content">
         <div class="dark-mode-wrapper" aria-live="polite">
-          <button id="dark-mode-btn" class="dark-mode-btn" aria-label="click to toggle theme">Light</button>
+          <button id="dark-mode-btn" class="dark-mode-btn">Light</button>
           <button id="settings" class="settings-btn">Monthly Cap</button>
           <p id="current-cap-display" class="current-cap-display">Current cap: </p>
-          <div id="cap-setter" class="cap-setter hidden">
+          <div id="cap-setter" class="cap-setter hidden" role="dialog" aria-modal="true" aria-labelledby="cap-dialog-title">
+            <h2 id="cap-dialog-title" class="sr-only">Set Monthly Cap</h2>
             <input type="number" id="cap" name="cap" placeholder="Amount" />
             <div class="cap-btns">
               <button id="set-btn" class="set-btn">Set</button>
@@ -84,8 +85,8 @@
           <p>Really? You buying a country?</p>
         </div>
 
-        <div id="cap-warning" class="cap-warning hidden" aria-live="polite">
-          <p>
+        <div id="cap-warning" class="cap-warning hidden" aria-live="polite" role="dialog" aria-modal="true" aria-labelledby="cap-warning-title">
+          <p id="cap-warning-title">
             This operation exceeds your monthly cap. Are you sure you want to
             continue?
           </p>
@@ -97,6 +98,7 @@
 
         <div class="add-expense-container">
           <form>
+            <label for="item" class="sr-only">Item name</label>
             <input
               type="text"
               id="item"
@@ -105,6 +107,7 @@
               maxlength="30"
               required
             />
+            <label for="amount" class="sr-only">Amount</label>
             <input
               type="text"
               id="amount"
@@ -112,6 +115,7 @@
               placeholder="Amount"
               required
             />
+            <label for="category" class="sr-only">Category</label>
             <select id="category" name="category" required>
               <option value="" disabled selected>-- select category --</option>
               <option value="Housing">Housing</option>
@@ -132,11 +136,13 @@
               <option value="Kids">Kids</option>
               <option value="Bills">Bills</option>
             </select>
+            <label for="date" class="sr-only">Date</label>
             <input type="date" id="date" name="date" required />
             <button id="form-btn">Add Expense</button>
           </form>
         </div>
         <div class="filter">
+          <label for="category-filter" class="sr-only">Filter by Catehory</label>
           <select name="category-filter" id="category-filter" required>
             <option value="All categories">All categories</option>
             <option value="Housing">Housing</option>
@@ -155,6 +161,7 @@
             <option value="Kids">Kids</option>
             <option value="Bills">Bills</option>
           </select>
+          <label for="period-filter" class="sr-only">Filter by date</label>
           <select name="period-filter" id="period-filter" required>
             <option value="48000">Lifetime</option>
             <option value="90">90 days</option>
@@ -168,9 +175,7 @@
         </div>
       </div>
 
-      <div class="all-expenses" id="all-expenses" aria-live="polite">
-        <p>Expenses:</p>
-      </div>
+      <div class="all-expenses" id="all-expenses" aria-live="polite"></div>
     </main>
     <script src="index.js" type="module"></script>
   </body>
