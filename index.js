@@ -196,6 +196,9 @@ const saveTheme = () => {
 
 const setMonthlyCap = () => {
   monthlyCap = Number(capAmount.value);
+  if (monthlyCap < 0) {
+    monthlyCap = 0
+  }
   currentCap.style.display = "block"
   currentCap.textContent = `Current cap: ${monthlyCap}`
   saveCap();
