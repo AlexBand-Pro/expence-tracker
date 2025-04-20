@@ -1,19 +1,25 @@
 # 💰 Expense Tracker
 
-A simple, browser-based expense tracker that helps you log, filter, and visualize your spending. Built with vanilla JavaScript and Chart.js, it stores data locally in the browser — no accounts or servers required.
+A browser-based application for tracking and visualizing personal expenses.
+
+This app allows users to add and remove expense entries — each showing item name, amount, category, and date. It calculates total expenses in real-time and automatically updates a visual chart using Chart.js. All data is stored locally in the browser using `localStorage`, so there's no need for accounts or servers.
+
+Built with vanilla JavaScript, HTML, CSS, and Chart.js, it features a clean, responsive layout, optimized performance, and improved accessibility (a11y). The app also allows users to filter expenses by category and date, set a monthly spending cap, toggle light/dark themes, and export their data as a CSV file.
 
 ---
 
 ## 🌟 Features
 
 - ✅ Add, view, and delete expenses  
-- 📊 Visualize spending by category with a pie chart  
 - 🔍 Filter expenses by category and date  
-- 💾 Persistent data using `localStorage`  
+- 📊 Real-time chart updates via Chart.js  
+- 💾 Persistent storage using `localStorage`  
 - 🚫 Monthly spending cap with warning system  
-- 🌙 Light & Dark mode toggle  
 - 📁 Export data to CSV  
+- 🌙 Light & Dark mode toggle  
 - ♿️ Improved accessibility (ARIA labels, color contrast, keyboard navigation)  
+- ⚡ Optimized performance with virtual scrolling  
+- 📱 Fully responsive design
 
 ---
 
@@ -21,44 +27,54 @@ A simple, browser-based expense tracker that helps you log, filter, and visualiz
 
 > ![expense-tracker-project](https://github.com/user-attachments/assets/b803275d-febb-4c84-afb8-7491112c81e9)
 
-
 ---
-## Usage
 
-### Add an Expense
-- Fill in **Item**, **Amount**, **Category** and **Date**  
+## 🛠 Usage
+
+### ➕ Add an Expense
+
+- Fill in **Item**, **Amount**, **Category**, and **Date**
 - Click **Add**
 
-### View & Delete
-- All entries appear in the list below  
-- Click **Delete** on any entry to remove it
+### 📋 View & Delete
 
-### Filter
-- Select a **Category** or **Period** from the dropdowns  
-- The view and chart will update automatically
+- Expenses appear in a scrollable table
+- Click **Delete** to remove an entry
 
-### Set Monthly Cap
-- Click the ⚙️ **Settings** button  
-- Enter a cap amount and save  
-- If adding an expense exceeds the cap, you’ll be prompted to confirm
+### 🔎 Filter Expenses
 
-### Toggle Theme
-- Click **Dark / Light** button to switch themes
+- Use the **Category** and **Date** dropdowns to filter entries
+- The list and chart update automatically
 
-### Export to CSV
-- Click the 📥 **Export** button to download `expenses.csv`
+### ⚙️ Set Monthly Cap
 
-## Set Monthly Cap
+- Click the **Settings** button
+- Enter your monthly cap and save
+- If new expenses exceed the cap, a warning will be shown
 
-All data and preferences are stored in browser LocalStorage:
+### 🎨 Toggle Theme
+
+- Switch between **Dark / Light** mode
+
+### 📥 Export to CSV
+
+- Click the **Export** button to download your expense list as `expenses.csv`
+
+---
+
+## 💾 Data Storage
+
+All data and preferences are stored locally in the browser:
 
 - `expenses` — array of expense objects  
 - `cap` — numeric monthly cap  
-- `theme` — boolean for dark mode
+- `theme` — current theme preference
 
-## Built With
+---
 
-- JavaScript — core logic
-- HTML5 & CSS3 — markup and styling
-- Chart.js — pie chart visualization  
-- uuid — unique IDs for each expense  
+## 🧰 Built With
+
+- **JavaScript** — core logic  
+- **HTML5 & CSS3** — markup and styling  
+- **Chart.js** — data visualization  
+- **uuid** — unique IDs for each entry
