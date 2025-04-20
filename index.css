@@ -108,12 +108,14 @@ main {
   border-radius: 0.5em;
   padding: 0.5em 0.5em 0.5em 0.5em;
   margin-top: 1em;
+  position: relative;
 }
 
 .expense-list {
   display: flex;
   flex-direction: column;
   gap: 1.5em;
+  position: relative;
 }
 
 .item-name-line {

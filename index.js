@@ -43,7 +43,92 @@ if (storedTheme) {
   darkMode = JSON.parse(storedTheme);
 }
 
+
 // Functions
+
+function setupExpensesContainer(itemsArr, categoryText = "All categories") {
+  const container = document.getElementById("all-expenses")
+  container.innerHTML = ""
+  document.getElementById("data-placeholder").style.display =
+    itemsArr.length === 0 ? "flex" : "none"
+  container.insertAdjacentHTML(
+    "beforeend",
+    `<p>${categoryText}</p>
+     <div id="expense-list" class="expense-list"></div>`
+  )
+}
+
+function renderVirtualList(data) {
+  const rowHeight = 130;
+  const buffer = 5;
+  const container = document.getElementById("all-expenses");
+  const list = document.getElementById("expense-list");
+
+  // set the inner scrolling‐container height
+  list.style.height = data.length * rowHeight + "px";
+
+  function updateVisibleItems() {
+    const scrollTop = container.scrollTop;
+    const start = Math.max(0, Math.floor(scrollTop / rowHeight) - buffer);
+    const end = Math.min(
+      data.length,
+      Math.ceil((scrollTop + container.clientHeight) / rowHeight) + buffer
+    );
+
+    list.innerHTML = ""; // clear only the scrolling list
+
+    for (let i = start; i < end; i++) {
+      const expense = data[i];
+
+      // outer wrapper
+      const expenseList = document.createElement("div");
+      expenseList.classList.add("expense-list");
+      expenseList.style.position = "absolute";
+      expenseList.style.top = `${i * rowHeight}px`;
+      expenseList.style.left = "0";
+      expenseList.style.right = "0";
+      expenseList.style.height = `${rowHeight}px`;
+
+      // your original inner structure
+      const expenseDiv = document.createElement("div");
+      expenseDiv.classList.add("expense");
+
+      const dateP = document.createElement("p");
+      dateP.textContent = expense.date;
+
+      const detailsDiv = document.createElement("div");
+      detailsDiv.classList.add("expense-details");
+      if (darkMode) detailsDiv.classList.add("dark-theme-chart");
+
+      const lineOneDiv = document.createElement("div");
+      lineOneDiv.classList.add("details-line-one");
+
+      const itemSpan = document.createElement("span");
+      itemSpan.className = "item-name-line";
+      itemSpan.textContent = expense.item;
+
+      const amountSpan = document.createElement("span");
+      amountSpan.classList.add("item-amount");
+      amountSpan.textContent = `$${expense.amount}`;
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.classList.add("delete-expense-btn");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.dataset.id = expense.id;
+      deleteBtn.ariaLabel = `Delete expense on ${expense.date} for ${expense.amount}`;
+
+      lineOneDiv.append(itemSpan, amountSpan);
+      detailsDiv.append(lineOneDiv, deleteBtn);
+      expenseDiv.append(dateP, detailsDiv);
+      expenseList.appendChild(expenseDiv);
+
+      list.appendChild(expenseList);
+    }
+  }
+
+  container.addEventListener("scroll", updateVisibleItems);
+  updateVisibleItems(); // initial draw
+}
 
 const saveCap = () => {
   localStorage.setItem("cap", JSON.stringify(monthlyCap));
@@ -162,15 +247,13 @@ function exportToCSV(data) {
 const toggleDarkMode = () => {
   darkMode = !darkMode;
   saveTheme();
-  updateElementsTheme()
+  updateElementsTheme();
 
   filterItems();
-
-  console.log(darkMode)
 };
 
 const updateElementsTheme = () => {
-  darkModeBtn.textContent = darkMode ? "Light" : "Dark";
+  darkModeBtn.textContent = darkMode ? "Dark" : "Light";
   document.querySelector("body").classList.toggle("dark-theme");
   darkModeBtn.classList.toggle("dark-theme-chart");
   settengsBtn.classList.toggle("dark-theme-chart");
@@ -187,11 +270,11 @@ const updateElementsTheme = () => {
   categoryFilter.classList.toggle("dark-theme-chart");
   periodFilter.classList.toggle("dark-theme-chart");
   document.querySelector("select").classList.toggle("dark-theme-chart");
-}
+};
 
 const checkDarkMode = () => {
   if (darkMode) {
-    updateElementsTheme()
+    updateElementsTheme();
   } else {
     return;
   }
@@ -301,8 +384,9 @@ const getTotalSpent = (arr) => {
 const renderExpenses = (itemsArr, categoryText = "All categories") => {
   const container = document.getElementById("all-expenses");
 
-  const expenseList = document.createElement("div")
-  expenseList.classList.add("expense-list")
+  const expenseList = document.createElement("div");
+  expenseList.classList.add("expense-list");
+  expenseList.id = "expense-list";
 
   if (itemsArr.length === 0) {
     container.innerHTML = `<p>${categoryText}</p>
@@ -315,7 +399,6 @@ const renderExpenses = (itemsArr, categoryText = "All categories") => {
   }
 
   itemsArr.forEach((expense) => {
-
     const expenseDiv = document.createElement("div");
     expenseDiv.classList.add("expense");
 
@@ -329,14 +412,13 @@ const renderExpenses = (itemsArr, categoryText = "All categories") => {
     } else {
       detailsDiv.classList.remove("dark-theme-chart");
     }
-    console.log(detailsDiv)
 
     const lineOneDiv = document.createElement("div");
     lineOneDiv.classList.add("details-line-one");
 
     const itemSpan = document.createElement("span");
     itemSpan.textContent = expense.item;
-    itemSpan.className = "item-name-line"
+    itemSpan.className = "item-name-line";
 
     const amountSpan = document.createElement("span");
     amountSpan.classList.add("item-amount");
@@ -346,12 +428,12 @@ const renderExpenses = (itemsArr, categoryText = "All categories") => {
     deleteBtn.classList.add("delete-expense-btn");
     deleteBtn.textContent = "Delete";
     deleteBtn.dataset.id = expense.id;
-    deleteBtn.ariaLabel = `Delete expense on ${expense.date} for ${expense.amount}`
+    deleteBtn.ariaLabel = `Delete expense on ${expense.date} for ${expense.amount}`;
 
     lineOneDiv.append(itemSpan, amountSpan);
     detailsDiv.append(lineOneDiv, deleteBtn);
     expenseDiv.append(dateP, detailsDiv);
-    expenseList.appendChild(expenseDiv)
+    expenseList.appendChild(expenseDiv);
 
     container.appendChild(expenseList);
   });
@@ -370,7 +452,8 @@ const clearForm = () => {
 };
 
 const renderApp = (arr, categoryText) => {
-  renderExpenses(arr, categoryText);
+  setupExpensesContainer(arr, categoryText)
+  renderVirtualList(arr)
   renderTotalSpent(arr);
   renderChart(arr);
 };
@@ -445,3 +528,5 @@ document.getElementById("remove-cap-btn").addEventListener("click", removeCap);
 
 renderApp(expensesArray);
 checkDarkMode();
+// setupExpensesContainer(expensesArray, "All categories")
+// renderVirtualList(expensesArray)
