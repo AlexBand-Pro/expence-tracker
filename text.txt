@@ -3,8 +3,6 @@ Code Organization & Maintainability
 
 Split your JS into modules (e.g. storage.js, ui.js, chart.js, theme.js) so each file is smaller and easier to navigate.
 
-Add a linter/formatter (ESLint + Prettier) and include a .editorconfig so your code style stays consistent, especially if you onboard collaborators later.
-
 Robustness & Testing
 
 Guard your localStorage reads with try/catch so a malformed entry can’t break the entire app.
@@ -14,8 +12,6 @@ Consider writing a few unit tests for your pure functions (getTotalSpent, getCat
 Accessibility Enhancements
 
 Add aria-live="polite" (or assertive) regions around your success, error, and over‑cap modals so screen readers announce them.
-
-Give your delete buttons an aria-label="Delete expense on [date] for [amount]" to improve context for assistive tech.
 
 Performance & Scaling
 

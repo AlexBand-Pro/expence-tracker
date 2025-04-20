@@ -43,6 +43,8 @@ if (storedTheme) {
   darkMode = JSON.parse(storedTheme);
 }
 
+// Functions
+
 const saveCap = () => {
   localStorage.setItem("cap", JSON.stringify(monthlyCap));
 };
@@ -158,6 +160,16 @@ function exportToCSV(data) {
 }
 
 const toggleDarkMode = () => {
+  darkMode = !darkMode;
+  saveTheme();
+  updateElementsTheme()
+
+  filterItems();
+
+  console.log(darkMode)
+};
+
+const updateElementsTheme = () => {
   darkModeBtn.textContent = darkMode ? "Light" : "Dark";
   document.querySelector("body").classList.toggle("dark-theme");
   darkModeBtn.classList.toggle("dark-theme-chart");
@@ -174,24 +186,12 @@ const toggleDarkMode = () => {
   document.getElementById("date").classList.toggle("dark-theme-chart");
   categoryFilter.classList.toggle("dark-theme-chart");
   periodFilter.classList.toggle("dark-theme-chart");
-  const details = document.getElementById("expense-details");
   document.querySelector("select").classList.toggle("dark-theme-chart");
-
-  if (details) {
-    details.style.backgroundColor = darkMode ? "#000872" : "unset";
-  }
-
-  filterItems();
-
-  darkMode = !darkMode;
-  saveTheme();
-};
+}
 
 const checkDarkMode = () => {
   if (darkMode) {
-    toggleDarkMode();
-    darkMode = true;
-    saveTheme();
+    updateElementsTheme()
   } else {
     return;
   }
@@ -301,6 +301,9 @@ const getTotalSpent = (arr) => {
 const renderExpenses = (itemsArr, categoryText = "All categories") => {
   const container = document.getElementById("all-expenses");
 
+  const expenseList = document.createElement("div")
+  expenseList.classList.add("expense-list")
+
   if (itemsArr.length === 0) {
     container.innerHTML = `<p>${categoryText}</p>
                            <p>No items found</p>
@@ -312,6 +315,7 @@ const renderExpenses = (itemsArr, categoryText = "All categories") => {
   }
 
   itemsArr.forEach((expense) => {
+
     const expenseDiv = document.createElement("div");
     expenseDiv.classList.add("expense");
 
@@ -320,13 +324,19 @@ const renderExpenses = (itemsArr, categoryText = "All categories") => {
 
     const detailsDiv = document.createElement("div");
     detailsDiv.classList.add("expense-details");
-    detailsDiv.id = "expense-details";
+    if (darkMode) {
+      detailsDiv.classList.add("dark-theme-chart");
+    } else {
+      detailsDiv.classList.remove("dark-theme-chart");
+    }
+    console.log(detailsDiv)
 
     const lineOneDiv = document.createElement("div");
     lineOneDiv.classList.add("details-line-one");
 
     const itemSpan = document.createElement("span");
     itemSpan.textContent = expense.item;
+    itemSpan.className = "item-name-line"
 
     const amountSpan = document.createElement("span");
     amountSpan.classList.add("item-amount");
@@ -341,8 +351,9 @@ const renderExpenses = (itemsArr, categoryText = "All categories") => {
     lineOneDiv.append(itemSpan, amountSpan);
     detailsDiv.append(lineOneDiv, deleteBtn);
     expenseDiv.append(dateP, detailsDiv);
+    expenseList.appendChild(expenseDiv)
 
-    container.appendChild(expenseDiv);
+    container.appendChild(expenseList);
   });
 };
 

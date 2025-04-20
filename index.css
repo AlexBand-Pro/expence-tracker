@@ -36,6 +36,7 @@ header {
 .width-setter-div {
   flex: 1;
   max-width: 1020px;
+  padding-left: 1em;
 }
 
 h1 {
@@ -101,6 +102,22 @@ main {
 
 .all-expenses {
   gap: 1.5em;
+  height: 412px;
+  overflow-y: scroll;
+  border: 1px solid rgb(233, 233, 233);
+  border-radius: 0.5em;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  margin-top: 1em;
+}
+
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.item-name-line {
+  font-size: 1.2rem;
 }
 
 .expense {
@@ -340,6 +357,10 @@ form>button:active {
 
 .dark-icon {
   color: whitesmoke;
+}
+
+.dark-theme-details {
+  background-color: #000872;
 }
 
 /* Utility */
