@@ -16,7 +16,18 @@ let periodFilterValue = "1925-04-18";
 const stored = localStorage.getItem("expenses");
 
 if (stored) {
-  expensesArray = JSON.parse(stored);
+  try {
+    const parsed = JSON.parse(stored);
+    if (Array.isArray(parsed)) {
+      expensesArray = parsed;
+    } else {
+      console.warn("Invalid expenses data. Resetting.");
+      localStorage.removeItem("expenses");
+    }
+  } catch (e) {
+    console.error("Failed to parse expenses:", e);
+    localStorage.removeItem("expenses");
+  }
 }
 
 const amountInput = document.getElementById("amount");
@@ -36,7 +47,18 @@ let monthlyCap = null;
 const storedCap = localStorage.getItem("cap");
 
 if (storedCap) {
-  monthlyCap = JSON.parse(storedCap);
+  try {
+    const parsedCap = JSON.parse(storedCap);
+    if (typeof parsedCap === "number" && parsedCap >= 0) {
+      monthlyCap = parsedCap;
+    } else {
+      console.warn("Invalid cap value. Removing.");
+      localStorage.removeItem("monthlyCap");
+    }
+  } catch (e) {
+    console.error("Cap parse failed:", e);
+    localStorage.removeItem("monthlyCap");
+  }
 }
 
 if (monthlyCap) {
@@ -54,7 +76,18 @@ let darkMode = false;
 const storedTheme = localStorage.getItem("theme");
 
 if (storedTheme) {
-  darkMode = JSON.parse(storedTheme);
+  try {
+    const parsed = JSON.parse(storedTheme);
+    if (typeof parsed === "boolean") {
+      darkMode = parsed;
+    } else {
+      console.warn("Invalid theme value");
+      localStorage.removeItem("theme");
+    }
+  } catch (e) {
+    console.error("Theme parse error:", e);
+    localStorage.removeItem("theme");
+  }
 }
 
 
@@ -63,13 +96,26 @@ if (storedTheme) {
 function setupExpensesContainer(itemsArr, categoryText = "All categories") {
   const container = document.getElementById("all-expenses")
   container.innerHTML = ""
+  const noDataMessage = itemsArr.length ? "" : "<p>No items found</p>"
+  
   document.getElementById("data-placeholder").style.display =
     itemsArr.length === 0 ? "flex" : "none"
   container.insertAdjacentHTML(
     "beforeend",
     `<h2 id="category-heading">${categoryText}</h2>
+    ${noDataMessage}
      <ul id="expense-list" aria-labelledby="category-heading"" class="expense-list"></ul>`
   )
+
+  if (!itemsArr.length) {
+    container.style.height = "135px"
+  } else if (itemsArr.length === 1) {
+    container.style.height = "200px"
+  } else if (itemsArr.length === 2) {
+    container.style.height = "300px"
+  } else if (itemsArr.length > 2) {
+    container.style.height = "410px"
+  }
 }
 
 function renderVirtualList(data) {
@@ -288,7 +334,7 @@ const checkCap = (item, amount, category, date) => {
     mainContent.setAttribute("aria-hidden", "false");
     document.getElementById("warning-yes-btn").focus();
     if (cleanupFocusTrap) cleanupFocusTrap();
-    
+
     yesBtn.removeEventListener("click", handleCapYesResponse);
     noBtn.removeEventListener("click", handleCapNoResponse);
   };
