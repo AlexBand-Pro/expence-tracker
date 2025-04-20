@@ -51,11 +51,19 @@
     </header>
     <main>
       <div class="canvas-wrapper" aria-live="polite">
-        <button id="export-btn" class="export-btn" aria-label="click to download a scv sheet of all your expenses to your computer">
+        <button
+          id="export-btn"
+          class="export-btn"
+          aria-label="click to download a scv sheet of all your expenses to your computer"
+        >
           <i id="download-icon" class="fa-solid fa-circle-down fa-2x"></i>
         </button>
         <canvas id="category-chart" aria-label="Expenses by category"></canvas>
-        <div id="data-placeholder" class="chart-place-holder" aria-label="Expenses chart placeholder">
+        <div
+          id="data-placeholder"
+          class="chart-place-holder"
+          aria-label="Expenses chart placeholder"
+        >
           <p>Your data</p>
           <p>will appear here</p>
         </div>
@@ -65,10 +73,25 @@
         <div class="dark-mode-wrapper" aria-live="polite">
           <button id="dark-mode-btn" class="dark-mode-btn">Light</button>
           <button id="settings" class="settings-btn">Monthly Cap</button>
-          <p id="current-cap-display" class="current-cap-display">Current cap: </p>
-          <div id="cap-setter" class="cap-setter hidden" role="dialog" aria-modal="true" aria-labelledby="cap-dialog-title">
+          <p id="current-cap-display" class="current-cap-display">
+            Current cap:
+          </p>
+          <div
+            id="cap-setter"
+            class="cap-setter hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cap-dialog-title"
+          >
             <h2 id="cap-dialog-title" class="sr-only">Set Monthly Cap</h2>
-            <input type="number" id="cap" name="cap" placeholder="Amount" />
+            <input
+              autocomplete="off"
+              inputmode="numeric"
+              type="number"
+              id="cap"
+              name="cap"
+              placeholder="Amount"
+            />
             <div class="cap-btns">
               <button id="set-btn" class="set-btn">Set</button>
               <button id="remove-cap-btn" class="remove-cap-btn">Remove</button>
@@ -77,15 +100,30 @@
           </div>
         </div>
 
-        <div id="success-module" class="success-module hidden" aria-live="polite">
+        <div
+          id="success-module"
+          class="success-module hidden"
+          aria-live="polite"
+        >
           <p>Success!</p>
         </div>
 
-        <div id="over-billion-module" class="over-billion-module hidden" aria-live="polite">
+        <div
+          id="over-billion-module"
+          class="over-billion-module hidden"
+          aria-live="polite"
+        >
           <p>Really? You buying a country?</p>
         </div>
 
-        <div id="cap-warning" class="cap-warning hidden" aria-live="polite" role="dialog" aria-modal="true" aria-labelledby="cap-warning-title">
+        <div
+          id="cap-warning"
+          class="cap-warning hidden"
+          aria-live="polite"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cap-warning-title"
+        >
           <p id="cap-warning-title">
             This operation exceeds your monthly cap. Are you sure you want to
             continue?
@@ -113,6 +151,8 @@
               id="amount"
               name="amount"
               placeholder="Amount"
+              autocomplete="off"
+              inputmode="numeric"
               required
             />
             <label for="category" class="sr-only">Category</label>
@@ -142,7 +182,9 @@
           </form>
         </div>
         <div class="filter">
-          <label for="category-filter" class="sr-only">Filter by Catehory</label>
+          <label for="category-filter" class="sr-only"
+            >Filter by Catehory</label
+          >
           <select name="category-filter" id="category-filter" required>
             <option value="All categories">All categories</option>
             <option value="Housing">Housing</option>
