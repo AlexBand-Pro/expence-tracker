@@ -501,7 +501,7 @@ const filterItems = () => {
 };
 
 const addNewExpense = (name, amount, category, date) => {
-  expensesArray.push({
+  expensesArray.unshift({
     id: uuidv4(),
     item: name,
     amount: amount,
