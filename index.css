@@ -53,13 +53,20 @@ main {
 }
 
 .canvas-wrapper {
-  width: 200px;
-  height: 200px;
-  margin: 3em auto 1.5em;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  height: 300px !important;
+  width: 250px !important;
+  margin: 3em auto 1.5em;
+  position: relative;
+  overflow: hidden;
+}
+
+#category-chart {
+  width: 100%;
+  height: auto;
 }
 
 .chart-place-holder {
@@ -80,7 +87,7 @@ main {
 .export-btn {
   position: absolute;
   top: 0;
-  left: -20px;
+  left: 0;
   background-color: transparent;
   border: none;
 }
@@ -98,6 +105,12 @@ main {
 .dark-mode-wrapper {
   flex-direction: row;
   gap: 1em;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.current-cap-display {
+  width: 100%;
 }
 
 .all-expenses {
@@ -107,7 +120,6 @@ main {
   border: 1px solid rgb(233, 233, 233);
   border-radius: 0.5em;
   padding: 0.5em 0.5em 0.5em 0.5em;
-  margin-top: 1em;
   position: relative;
 }
 
@@ -175,7 +187,7 @@ form>button,
 }
 
 .settings-btn {
-  width: 100px;
+  width: 130px;
 }
 
 form>input,
@@ -184,10 +196,6 @@ form>button,
 .total-spent>p,
 .filter>select,
 .expense-details {
-  width: 100%;
-}
-
-.dark-mode-wrapper {
   width: 100%;
 }
 
@@ -417,6 +425,15 @@ form>button:active {
   .canvas-wrapper {
     grid-column: 1;
     grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 300px !important;
+    width: 350px !important;
+    margin: 3em auto 1.5em;
+    position: relative;
+    overflow: hidden;
   }
 
   .all-expenses {
@@ -425,6 +442,7 @@ form>button:active {
     max-width: 425px;
     width: 100%;
     margin: 0 auto;
+    margin-top: 1em;
   }
 
   .content-settigns-content {

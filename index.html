@@ -65,6 +65,7 @@
         <div class="dark-mode-wrapper" aria-live="polite">
           <button id="dark-mode-btn" class="dark-mode-btn" aria-label="click to toggle theme">Light</button>
           <button id="settings" class="settings-btn">Monthly Cap</button>
+          <p id="current-cap-display" class="current-cap-display">Current cap: </p>
           <div id="cap-setter" class="cap-setter hidden">
             <input type="number" id="cap" name="cap" placeholder="Amount" />
             <div class="cap-btns">
@@ -85,7 +86,7 @@
 
         <div id="cap-warning" class="cap-warning hidden" aria-live="polite">
           <p>
-            You are about to exceed your monthly cap. Are you sure you want to
+            This operation exceeds your monthly cap. Are you sure you want to
             continue?
           </p>
           <div class="cap-warning-btn">

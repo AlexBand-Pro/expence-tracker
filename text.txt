@@ -15,17 +15,10 @@ Add aria-live="polite" (or assertive) regions around your success, error, and ov
 
 Performance & Scaling
 
-If a user logs hundreds of entries, rendering all of them can get slow. You could implement virtual scrolling or pagination to keep the list snappy.
-
-Debounce your filter inputs so rapid typing/selection doesn’t trigger too many renders.
-
 Polish & Extras
 
-Turn it into a Progressive Web App with a service worker and offline caching—so you can demo it even when you’re offline.
+make sure that when you check the cap you check it for this month not all time
 
-Add export/import JSON in addition to CSV for power users to back up/restore entire data sets.
-
-Include a README with screenshots, a live demo link (via GitHub Pages or Netlify), and clear instructions so anyone landing on your repo can dive right in.
 
 -----------A11y
 

@@ -21,9 +21,11 @@ const amountInput = document.getElementById("amount");
 
 const darkModeBtn = document.getElementById("dark-mode-btn");
 
-const settengsBtn = document.getElementById("settings");
+const settingsBtn = document.getElementById("settings");
 
 const capAmount = document.getElementById("cap");
+
+const currentCap = document.getElementById("current-cap-display");
 
 let chartInstance = null;
 
@@ -33,6 +35,14 @@ const storedCap = localStorage.getItem("cap");
 
 if (storedCap) {
   monthlyCap = JSON.parse(storedCap);
+}
+
+if (monthlyCap) {
+  currentCap.style.display = "block"
+  currentCap.textContent = `Current cap: ${monthlyCap}`
+} else {
+  currentCap.textContent = ""
+  currentCap.style.display = "none"
 }
 
 let darkMode = false;
@@ -64,7 +74,6 @@ function renderVirtualList(data) {
   const container = document.getElementById("all-expenses");
   const list = document.getElementById("expense-list");
 
-  // set the inner scrolling‐container height
   list.style.height = data.length * rowHeight + "px";
 
   function updateVisibleItems() {
@@ -75,12 +84,11 @@ function renderVirtualList(data) {
       Math.ceil((scrollTop + container.clientHeight) / rowHeight) + buffer
     );
 
-    list.innerHTML = ""; // clear only the scrolling list
+    list.innerHTML = "";
 
     for (let i = start; i < end; i++) {
       const expense = data[i];
 
-      // outer wrapper
       const expenseList = document.createElement("div");
       expenseList.classList.add("expense-list");
       expenseList.style.position = "absolute";
@@ -89,7 +97,6 @@ function renderVirtualList(data) {
       expenseList.style.right = "0";
       expenseList.style.height = `${rowHeight}px`;
 
-      // your original inner structure
       const expenseDiv = document.createElement("div");
       expenseDiv.classList.add("expense");
 
@@ -127,7 +134,7 @@ function renderVirtualList(data) {
   }
 
   container.addEventListener("scroll", updateVisibleItems);
-  updateVisibleItems(); // initial draw
+  updateVisibleItems();
 }
 
 const saveCap = () => {
@@ -144,6 +151,8 @@ const saveTheme = () => {
 
 const setMonthlyCap = () => {
   monthlyCap = Number(capAmount.value);
+  currentCap.style.display = "block"
+  currentCap.textContent = `Current cap: ${monthlyCap}`
   saveCap();
   capAmount.value = "";
   handleModuleDisplay();
@@ -161,6 +170,8 @@ const handleModuleDisplay = () => {
 
 const removeCap = () => {
   monthlyCap = null;
+  currentCap.textContent = ""
+  currentCap.style.display = "none"
   saveCap();
   handleModuleDisplay();
 };
@@ -191,7 +202,19 @@ const checkAmount = (item, amount, category, date) => {
 };
 
 const checkCap = (item, amount, category, date) => {
-  const total = getTotalSpent(expensesArray);
+
+  const startOfMonth = new Date(today);
+  startOfMonth.setDate(1);
+
+  console.log(startOfMonth.setDate(1))
+
+  const periodFilterValue = startOfMonth.toISOString().split("T")[0];
+
+  const filteredByDate = expensesArray.filter((expense) => {
+    return expense.date >= periodFilterValue;
+  });
+
+  const total = getTotalSpent(filteredByDate);
   const capModal = document.getElementById("cap-warning");
   const yesBtn = document.getElementById("warning-yes-btn");
   const noBtn = document.getElementById("warning-no-btn");
@@ -256,7 +279,7 @@ const updateElementsTheme = () => {
   darkModeBtn.textContent = darkMode ? "Dark" : "Light";
   document.querySelector("body").classList.toggle("dark-theme");
   darkModeBtn.classList.toggle("dark-theme-chart");
-  settengsBtn.classList.toggle("dark-theme-chart");
+  settingsBtn.classList.toggle("dark-theme-chart");
   document.getElementById("download-icon").classList.toggle("dark-icon");
   document.querySelector("main").classList.toggle("dark-theme");
   document
@@ -327,9 +350,13 @@ const renderChart = (arr) => {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: "bottom",
+          position: "bottom", 
+          labels: {
+            boxWidth: 13,
+          },
         },
       },
     },
@@ -379,64 +406,6 @@ const getTotalSpent = (arr) => {
   const total = totalInCents / 100;
 
   return total;
-};
-
-const renderExpenses = (itemsArr, categoryText = "All categories") => {
-  const container = document.getElementById("all-expenses");
-
-  const expenseList = document.createElement("div");
-  expenseList.classList.add("expense-list");
-  expenseList.id = "expense-list";
-
-  if (itemsArr.length === 0) {
-    container.innerHTML = `<p>${categoryText}</p>
-                           <p>No items found</p>
-                          `;
-    document.getElementById("data-placeholder").style.display = "flex";
-  } else {
-    container.innerHTML = `<p>${categoryText}</p>`;
-    document.getElementById("data-placeholder").style.display = "none";
-  }
-
-  itemsArr.forEach((expense) => {
-    const expenseDiv = document.createElement("div");
-    expenseDiv.classList.add("expense");
-
-    const dateP = document.createElement("p");
-    dateP.textContent = expense.date;
-
-    const detailsDiv = document.createElement("div");
-    detailsDiv.classList.add("expense-details");
-    if (darkMode) {
-      detailsDiv.classList.add("dark-theme-chart");
-    } else {
-      detailsDiv.classList.remove("dark-theme-chart");
-    }
-
-    const lineOneDiv = document.createElement("div");
-    lineOneDiv.classList.add("details-line-one");
-
-    const itemSpan = document.createElement("span");
-    itemSpan.textContent = expense.item;
-    itemSpan.className = "item-name-line";
-
-    const amountSpan = document.createElement("span");
-    amountSpan.classList.add("item-amount");
-    amountSpan.textContent = `$${expense.amount}`;
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add("delete-expense-btn");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.dataset.id = expense.id;
-    deleteBtn.ariaLabel = `Delete expense on ${expense.date} for ${expense.amount}`;
-
-    lineOneDiv.append(itemSpan, amountSpan);
-    detailsDiv.append(lineOneDiv, deleteBtn);
-    expenseDiv.append(dateP, detailsDiv);
-    expenseList.appendChild(expenseDiv);
-
-    container.appendChild(expenseList);
-  });
 };
 
 const renderTotalSpent = (arr) => {
@@ -514,7 +483,7 @@ document.getElementById("export-btn").addEventListener("click", () => {
   exportToCSV(expensesArray);
 });
 
-settengsBtn.addEventListener("click", toggleSettingsModule);
+settingsBtn.addEventListener("click", toggleSettingsModule);
 
 document.getElementById("set-btn").addEventListener("click", setMonthlyCap);
 
@@ -528,5 +497,3 @@ document.getElementById("remove-cap-btn").addEventListener("click", removeCap);
 
 renderApp(expensesArray);
 checkDarkMode();
-// setupExpensesContainer(expensesArray, "All categories")
-// renderVirtualList(expensesArray)
