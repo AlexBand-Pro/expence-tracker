@@ -2,7 +2,7 @@
 
 A browser-based application for tracking and visualizing personal expenses.
 
-This app allows users to add and remove expense entries — each showing item name, amount, category, and date. It calculates total expenses in real-time and automatically updates a visual chart using Chart.js. All data is stored locally in the browser using `localStorage`, so there's no need for accounts or servers.
+This app allows users to add and remove expense entries — each showing item name, amount, category, and date. It calculates total expenses in real-time and automatically updates a visual chart using Chart.js. All data is stored locally using `localStorage`.
 
 Built with vanilla JavaScript, HTML, CSS, and Chart.js, it features a clean, responsive layout, optimized performance, and improved accessibility (a11y). The app also allows users to filter expenses by category and date, set a monthly spending cap, toggle light/dark themes, and export their data as a CSV file.
 
@@ -48,9 +48,9 @@ Built with vanilla JavaScript, HTML, CSS, and Chart.js, it features a clean, res
 
 ### ⚙️ Set Monthly Cap
 
-- Click the **Settings** button
+- Click the **Monthly Cap** button
 - Enter your monthly cap and save
-- If new expenses exceed the cap, a warning will be shown
+- If new expenses exceed the cap for the current month, a warning will be shown
 
 ### 🎨 Toggle Theme
 
