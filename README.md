@@ -25,7 +25,7 @@ Built with vanilla JavaScript, HTML, CSS, and Chart.js, it features a clean, res
 
 ## 📷 Demo
 
-> ![expense-tracker-project](https://github.com/user-attachments/assets/b803275d-febb-4c84-afb8-7491112c81e9)
+[![expense-tracker-project](https://github.com/user-attachments/assets/b803275d-febb-4c84-afb8-7491112c81e9)]([https://your-live-project-link.com](https://alexband-pro.github.io/expence-tracker/))
 
 ---
 
@@ -78,4 +78,5 @@ All data and preferences are stored locally in the browser:
 - **HTML5 & CSS3** — markup and styling  
 - **Chart.js** — data visualization  
 - **uuid** — unique IDs for each entry
+
 
