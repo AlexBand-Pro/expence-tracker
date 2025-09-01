@@ -25,7 +25,7 @@ Built with vanilla JavaScript, HTML, CSS, and Chart.js, it features a clean, res
 
 ## 📷 Demo
 
-[![Landing Page Screenshot](./images/landing-page-demo.png)](https://alexband-pro.github.io/lead-generation-landing-page/)
+[![Landing Page Screenshot]([./images/landing-page-demo.png](https://github.com/user-attachments/assets/b803275d-febb-4c84-afb8-7491112c81e9))](https://alexband-pro.github.io/lead-generation-landing-page/)
 
 ---
 
